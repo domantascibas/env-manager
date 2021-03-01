@@ -23,7 +23,7 @@ int main(void) {
     MX_FREERTOS_Init();
     osKernelStart();
     while (1) {
-
+        // should never reach here
     }
 }
 
@@ -83,7 +83,7 @@ void hw_init(void) {
     MX_RTC_Init();
     MX_SPI1_Init();
     MX_USART3_UART_Init();
-    MX_WWDG_Init();
+    // MX_WWDG_Init();
 }
 
  /**
