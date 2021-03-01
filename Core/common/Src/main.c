@@ -9,7 +9,6 @@
 #include "usart.h"
 #include "wwdg.h"
 #include "gpio.h"
-#include "module.h"
 
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
