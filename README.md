@@ -1,2 +1,2 @@
-# envi-manager
+# env-manager
 environmental manager project
