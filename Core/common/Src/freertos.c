@@ -29,7 +29,7 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 void StartDefaultTask(void *argument) {
-  for(;;) {
-    osDelay(1);
-  }
+    for(;;) {
+        osDelay(1);
+    }
 }
