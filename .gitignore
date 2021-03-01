@@ -1,0 +1,4 @@
+﻿project/bin/*
+*.lst
+*.d
+*.o
