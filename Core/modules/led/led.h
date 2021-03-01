@@ -4,7 +4,7 @@
 #include "stm32f103xb.h"
 #include "stm32f1xx_hal.h"
 
-#define LED_PORT GPIOB
+#define LED_GREEN GPIO_PIN_13
 #define LED_RED GPIO_PIN_9
 #define LED_YEL GPIO_PIN_8
 

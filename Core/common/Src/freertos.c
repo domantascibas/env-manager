@@ -13,12 +13,10 @@ void MX_FREERTOS_Init(void) {
 }
 
 void vLedAliveTask(void *pvParameters) {
-    portTickType xLastWakeTime;
-    const portTickType xFrequency = 1000;
-    xLastWakeTime = xTaskGetTickCount();
+    led_init();
 
     for (;;) {
-        led_toggle(LED_RED);
-        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+        led_toggle(LED_GREEN);
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
