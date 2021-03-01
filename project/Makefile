@@ -185,9 +185,9 @@ LDFLAGS += -Wl,--print-memory-usage
 include module.mk
 
 test:
-	@echo $(C_SOURCES)
-	@echo
-	@echo $(C_INCLUDES)
+	@echo + modules $(MODULE_DIRS)
+	@echo + C_src $(C_SOURCES)
+	@echo + Incl $(C_INCLUDES)
 
 # default action: build all
 all: $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).hex $(BIN_DIR)/$(TARGET).bin
