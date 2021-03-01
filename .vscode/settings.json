@@ -2,6 +2,7 @@
     "files.associations": {
         "freertos.h": "c",
         "cmsis_os.h": "c",
-        "task.h": "c"
+        "task.h": "c",
+        "gpio.h": "c"
     }
 }
