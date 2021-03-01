@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "freertos.h": "c"
+        "freertos.h": "c",
+        "cmsis_os.h": "c",
+        "task.h": "c"
     }
 }
