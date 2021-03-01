@@ -1,7 +1,7 @@
 #ifndef MODULE_LED_H
 #define MODULE_LED_H
 
-#include "stdint.h"
+#include "stm32f103xb.h"
 #include "stm32f1xx_hal.h"
 
 #define LED_PORT GPIOB
