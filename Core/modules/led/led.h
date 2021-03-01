@@ -1,8 +1,8 @@
-#ifndef LED_H
-#define LED_H
+#ifndef MODULE_LED_H
+#define MODULE_LED_H
 
-#include "stm32f103xb.h"
-#include "stm32f1xx_hal_gpio.h"
+#include "stdint.h"
+#include "stm32f1xx_hal.h"
 
 #define LED_PORT GPIOB
 #define LED_RED GPIO_PIN_9
