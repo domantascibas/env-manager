@@ -98,7 +98,7 @@ int main(void)
   MX_ADC1_Init();
   MX_CRC_Init();
   MX_I2C1_Init();
-  // MX_IWDG_Init();
+  MX_IWDG_Init();
   MX_RTC_Init();
   MX_SPI1_Init();
   MX_USART3_UART_Init();
@@ -209,6 +209,8 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+    // osDelay(10000);
   }
   /* USER CODE END Error_Handler_Debug */
 }

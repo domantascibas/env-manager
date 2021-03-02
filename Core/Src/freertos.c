@@ -23,6 +23,7 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "iwdg.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -50,10 +51,17 @@
 /* USER CODE END Variables */
 /* Definitions for statusLed */
 osThreadId_t statusLedHandle;
+osThreadId_t iwdgResetHandle;
 const osThreadAttr_t statusLed_attributes = {
   .name = "statusLed",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
+};
+
+const osThreadAttr_t iwdgReset_attributes = {
+  .name = "wdgReset",
+  .stack_size = 128,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +69,8 @@ const osThreadAttr_t statusLed_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void startStatusLed(void *argument);
+void statusLedTask(void *argument);
+void iwdgResetTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -93,7 +102,8 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of statusLed */
-  statusLedHandle = osThreadNew(startStatusLed, NULL, &statusLed_attributes);
+  iwdgResetHandle = osThreadNew(iwdgResetTask, NULL, &iwdgReset_attributes);
+  statusLedHandle = osThreadNew(statusLedTask, NULL, &statusLed_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -112,20 +122,28 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_startStatusLed */
-void startStatusLed(void *argument)
+void statusLedTask(void *argument)
 {
   /* USER CODE BEGIN startStatusLed */
   /* Infinite loop */
   for(;;)
   {
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-    osDelay(100);
       HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
     osDelay(100);
       HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
     osDelay(100);
   }
   /* USER CODE END startStatusLed */
+}
+
+void iwdgResetTask(void *argument) {
+    for (;;) {
+        osDelay(4500);
+        iwdgReset();
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        osDelay(100);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+    }
 }
 
 /* Private application code --------------------------------------------------*/
