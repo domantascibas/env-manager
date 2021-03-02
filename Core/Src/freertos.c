@@ -53,15 +53,15 @@
 osThreadId_t statusLedHandle;
 osThreadId_t iwdgResetHandle;
 const osThreadAttr_t statusLed_attributes = {
-  .name = "statusLed",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+    .name = "statusLed",
+    .stack_size = 128 * 4,
+    .priority = (osPriority_t) osPriorityNormal,
 };
 
 const osThreadAttr_t iwdgReset_attributes = {
-  .name = "wdgReset",
-  .stack_size = 128,
-  .priority = (osPriority_t) osPriorityHigh,
+    .name = "wdgReset",
+    .stack_size = 128,
+    .priority = (osPriority_t) osPriorityHigh,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,38 +80,38 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   * @retval None
   */
 void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+    /* USER CODE END Init */
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
+    /* USER CODE BEGIN RTOS_MUTEX */
+    /* add mutexes, ... */
+    /* USER CODE END RTOS_MUTEX */
 
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
+    /* USER CODE BEGIN RTOS_SEMAPHORES */
+    /* add semaphores, ... */
+    /* USER CODE END RTOS_SEMAPHORES */
 
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
+    /* USER CODE BEGIN RTOS_TIMERS */
+    /* start timers, add new ones, ... */
+    /* USER CODE END RTOS_TIMERS */
 
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
+    /* USER CODE BEGIN RTOS_QUEUES */
+    /* add queues, ... */
+    /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
-  /* creation of statusLed */
-  iwdgResetHandle = osThreadNew(iwdgResetTask, NULL, &iwdgReset_attributes);
-  statusLedHandle = osThreadNew(statusLedTask, NULL, &statusLed_attributes);
+    /* Create the thread(s) */
+    /* creation of statusLed */
+    iwdgResetHandle = osThreadNew(iwdgResetTask, NULL, &iwdgReset_attributes);
+    statusLedHandle = osThreadNew(statusLedTask, NULL, &statusLed_attributes);
 
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
+    /* USER CODE BEGIN RTOS_THREADS */
+    /* add threads, ... */
+    /* USER CODE END RTOS_THREADS */
 
-  /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
+    /* USER CODE BEGIN RTOS_EVENTS */
+    /* add events, ... */
+    /* USER CODE END RTOS_EVENTS */
 
 }
 
@@ -122,18 +122,16 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_startStatusLed */
-void statusLedTask(void *argument)
-{
-  /* USER CODE BEGIN startStatusLed */
-  /* Infinite loop */
-  for(;;)
-  {
-      HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-    osDelay(100);
-      HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
-    osDelay(100);
-  }
-  /* USER CODE END startStatusLed */
+void statusLedTask(void *argument) {
+    /* USER CODE BEGIN startStatusLed */
+    /* Infinite loop */
+    for (;;) {
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+        osDelay(100);
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
+        osDelay(100);
+    }
+    /* USER CODE END startStatusLed */
 }
 
 void iwdgResetTask(void *argument) {
