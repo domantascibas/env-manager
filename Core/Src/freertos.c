@@ -118,7 +118,12 @@ void startStatusLed(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    osDelay(100);
+      HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+    osDelay(100);
+      HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
+    osDelay(100);
   }
   /* USER CODE END startStatusLed */
 }
