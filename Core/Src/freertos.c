@@ -235,3 +235,99 @@ void MPT_Task(void *argument) {
         vTaskDelay(1000);
     }
 }
+
+// void PTS(int num, char *string) {
+//     if (num == uDEBUG) {
+//         // print to USB
+//         if (USB_debug == 1) {
+//             VCP(string);
+//             VCP("\r\n");
+//         }
+//         if (UART_debug == 1) {
+//             rtt_print((uint8_t *)string, strlen(string));
+//             // print to UART
+//             uart_tx_data(num, string);
+//             TX_char(num, '\r');
+//             TX_char(num, '\n');
+//         }
+//     } else {
+//         uart_tx_data(num, string);
+//     }
+// }
+
+// void PTS_d(const char *module, const char *format, ...) {
+//     va_list argptr;
+//     char *ptr = MSG;
+//     int size = MSG_size;
+//     int nch;
+//     sendDateTimeString(uDEBUG);
+//     nch = snprintf(ptr, size, "[%s]->", module);
+//     ptr += nch;
+//     size -= nch;
+//     va_start(argptr, format);
+//     vsnprintf(ptr, size, format, argptr);
+//     PTS(uDEBUG, MSG);
+//     va_end(argptr);
+// }
+
+// int UART_rxByte(int uartNo) {
+//     if (uartNo >= UART_INTERFACE_CNT) return -1;
+//     return Queue_popByte(uartData[uartNo].rxQueue);
+// }
+
+// void UART_initQueues(int uartNo) {
+//     UartData const *d;
+//     if (uartNo >= UART_INTERFACE_CNT) return;
+//     d = &uartData[uartNo];
+//     Queue_create(d->txQueue, d->txBuffer, d->txBufferSize);
+//     Queue_create(d->rxQueue, d->rxBuffer, d->rxBufferSize);
+// }
+
+// void TX_char(int uart, char c) {
+//     if (uart == uMODEM) {
+//         if (taskStatus(taskModemUART) != TASK_RUN) {
+//             return;
+//         }
+//     } else {
+//         if (taskStatus(taskUART) != TASK_RUN) {
+//             return;
+//         }
+//     }
+
+// #if FW_CONFIG_IS_FN_ENABLED(FN_RS)
+//     if (uart == 4 || uart == 5 || uart == 6) {
+//         if (!UART_getStatus((UARTNO)uart)) return; // check if UART is disabled
+//     }
+// #endif
+
+//     uint8_t volatile tmo = 0;
+//     if (uart < UART_INTERFACE_CNT) {
+//         while ((UART_txByte(uart, c) < 0) && (tmo < 10)) { // 1s sending to queue tmo // now 1000us * 10 = 10ms
+//             //os_dly_wait(1);
+//             Delay(1000);
+//             tmo++;
+//         }
+//     }
+// }
+
+// static void uart_tx_data(int32_t num, char *string) {
+//     while (*string) {
+//         TX_char(num, *string);
+//         string++;
+//     }
+// }
+
+// typedef struct _UartData {
+//     //uint8_t *packetBuffer;
+//     uint8_t *txBuffer;
+//     uint8_t *rxBuffer;
+//     volatile Queue *txQueue;
+//     volatile Queue *rxQueue;
+//     //uint16_t packetBufferSize;
+//     uint16_t txBufferSize;
+//     uint16_t rxBufferSize;
+// } UartData;
+
+// #define MSG_size                512
+
+// extern char MSG[MSG_size];
