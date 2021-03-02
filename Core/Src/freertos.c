@@ -5,6 +5,7 @@
 #include "iwdg.h"
 #include "queue.h"
 #include "usart.h"
+#include "semphr.h"
 
 #include "string.h"
 #include "stdio.h"
@@ -14,18 +15,26 @@
 osThreadId_t statusLedHandle;
 osThreadId_t iwdgResetHandle;
 
+SemaphoreHandle_t SimpleMutex;
+
+TaskHandle_t HPT_Handler;
+TaskHandle_t MPT_Handler;
+
 /**************** QUEUE HANDLER *****************/
 xQueueHandle St_Queue_Handler;
 
 /**************** TASK HANDLER *****************/
-xTaskHandle Sender1_Task_Handler;
-xTaskHandle Sender2_Task_Handler;
-xTaskHandle Receiver_Task_Handler;
+TaskHandle_t Sender1_Task_Handler;
+TaskHandle_t Sender2_Task_Handler;
+TaskHandle_t Receiver_Task_Handler;
 
 /*************** TASK FUNCTIONS ****************/
 void Sender1_Task(void *argument);
 void Sender2_Task(void *argument);
 void Receiver_Task(void *argument);
+
+void HPT_Task(void *argument);
+void MPT_Task(void *argument);
 
 /**************** STRUCTURE DEFINITION *****************/
 
@@ -70,15 +79,27 @@ void MX_FREERTOS_Init(void) {
         HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
     }
 
-    xTaskCreate(Sender1_Task, "SENDER1", TXRX_BUFFER_SIZE, NULL, 2, &Sender1_Task_Handler);
-    xTaskCreate(Sender2_Task, "SENDER2", TXRX_BUFFER_SIZE, NULL, 2, &Sender2_Task_Handler);
-    xTaskCreate(Receiver_Task, "RECEIVER", TXRX_BUFFER_SIZE, NULL, 1, &Receiver_Task_Handler);
+    // xTaskCreate(Sender1_Task, "SENDER1", TXRX_BUFFER_SIZE, NULL, 2, &Sender1_Task_Handler);
+    // xTaskCreate(Sender2_Task, "SENDER2", TXRX_BUFFER_SIZE, NULL, 2, &Sender2_Task_Handler);
+    // xTaskCreate(Receiver_Task, "RECEIVER", TXRX_BUFFER_SIZE, NULL, 1, &Receiver_Task_Handler);
+
+    SimpleMutex = xSemaphoreCreateMutex();
+
+    if (SimpleMutex != NULL) {
+        HAL_UART_Transmit(&huart3, (uint8_t *)"Mutex Created\r\n\n", 15, 1000);
+    }
+
+/// create tasks
+
+    xTaskCreate(HPT_Task, "HPT", 128, NULL, 3, &HPT_Handler);
+    xTaskCreate(MPT_Task, "MPT", 128, NULL, 2, &HPT_Handler);
+
 }
 
 void statusLedTask(void *argument) {
     /* USER CODE BEGIN startStatusLed */
     /* Infinite loop */
-    while(1) {
+    while (1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
         osDelay(100);
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
@@ -88,7 +109,7 @@ void statusLedTask(void *argument) {
 }
 
 void iwdgResetTask(void *argument) {
-    while(1) {
+    while (1) {
         osDelay(4500);
         iwdgReset();
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
@@ -102,8 +123,8 @@ void Sender1_Task(void *argument) {
 
     uint32_t TickDelay = pdMS_TO_TICKS(2000);
     while (1) {
-        char *str = "Entered SENDER1_Task\r\n about to SEND to the queue\r\n";
-        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+        // char *str = "Entered SENDER1_Task\r\n about to SEND to the queue\r\n";
+        // HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
 
         /****** ALOOCATE MEMORY TO THE PTR ********/
         ptrtostruct = pvPortMalloc(sizeof(my_struct));
@@ -115,8 +136,8 @@ void Sender1_Task(void *argument) {
 
         /***** send to the queue ****/
         if (xQueueSend(St_Queue_Handler, &ptrtostruct, portMAX_DELAY) == pdPASS) {
-            char *str2 = " Successfully sent the to the queue\r\nLeaving SENDER1_Task\r\n\n";
-            HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
+            // char *str2 = " Successfully sent the to the queue\r\nLeaving SENDER1_Task\r\n\n";
+            // HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
         }
 
         indx1 = indx1 + 1;
@@ -175,5 +196,42 @@ void Receiver_Task(void *argument) {
         vPortFree(Rptrtostruct);  // free the structure memory
 
         vTaskDelay(TickDelay);
+    }
+}
+
+void Send_Uart(char *str) {
+    xSemaphoreTake(SimpleMutex, portMAX_DELAY);
+    vTaskDelay(2000);
+    HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+    xSemaphoreGive(SimpleMutex);
+}
+
+void HPT_Task(void *argument) {
+    char *strtosend = "IN AAAAA===========================\r\n";
+    while (1) {
+        char *str = "AAAAA try to Send_Uart\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+
+        Send_Uart(strtosend);
+
+        char *str2 = "End AAAAA\r\n\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
+
+        vTaskDelay(2000);
+    }
+}
+
+void MPT_Task(void *argument) {
+    char *strtosend = "IN BBBBB...........................\r\n";
+    while (1) {
+        char *str = "BBBBB try to Send_Uart\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+
+        Send_Uart(strtosend);
+
+        char *str2 = "End BBBBB\r\n\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
+
+        vTaskDelay(1000);
     }
 }
