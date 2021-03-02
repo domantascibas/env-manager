@@ -78,7 +78,7 @@ void MX_FREERTOS_Init(void) {
 void statusLedTask(void *argument) {
     /* USER CODE BEGIN startStatusLed */
     /* Infinite loop */
-    for (;;) {
+    while(1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
         osDelay(100);
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
@@ -88,7 +88,7 @@ void statusLedTask(void *argument) {
 }
 
 void iwdgResetTask(void *argument) {
-    for (;;) {
+    while(1) {
         osDelay(4500);
         iwdgReset();
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
