@@ -9,6 +9,7 @@
 #include "usart.h"
 #include "wwdg.h"
 #include "gpio.h"
+#include "uart.h"
 
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
@@ -18,13 +19,15 @@ int main(void) {
     SystemClock_Config();
 
     MX_GPIO_Init();
+    uart_init();
+    
     MX_ADC1_Init();
     MX_CRC_Init();
     MX_I2C1_Init();
     MX_IWDG_Init();
     MX_RTC_Init();
     MX_SPI1_Init();
-    MX_USART3_UART_Init();
+    // MX_USART3_UART_Init();
     // MX_WWDG_Init();
 
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
