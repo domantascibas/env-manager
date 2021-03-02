@@ -3,6 +3,7 @@
         "freertos.h": "c",
         "cmsis_os.h": "c",
         "task.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "main.h": "c"
     }
 }
