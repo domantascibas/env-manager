@@ -1,57 +1,44 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-
-/* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
 #include "iwdg.h"
+#include "queue.h"
+#include "usart.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+#include "string.h"
+#include "stdio.h"
 
-/* USER CODE END Includes */
+#define TXRX_BUFFER_SIZE 128
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN Variables */
-
-/* USER CODE END Variables */
-/* Definitions for statusLed */
 osThreadId_t statusLedHandle;
 osThreadId_t iwdgResetHandle;
+
+/**************** QUEUE HANDLER *****************/
+xQueueHandle St_Queue_Handler;
+
+/**************** TASK HANDLER *****************/
+xTaskHandle Sender1_Task_Handler;
+xTaskHandle Sender2_Task_Handler;
+xTaskHandle Receiver_Task_Handler;
+
+/*************** TASK FUNCTIONS ****************/
+void Sender1_Task(void *argument);
+void Sender2_Task(void *argument);
+void Receiver_Task(void *argument);
+
+/**************** STRUCTURE DEFINITION *****************/
+
+typedef struct {
+    char *str;
+    int counter;
+    uint16_t large_value;
+} my_struct;
+
+
+int indx1 = 0;
+int indx2 = 0;
+
 const osThreadAttr_t statusLed_attributes = {
     .name = "statusLed",
     .stack_size = 128 * 4,
@@ -64,64 +51,30 @@ const osThreadAttr_t iwdgReset_attributes = {
     .priority = (osPriority_t) osPriorityHigh,
 };
 
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN FunctionPrototypes */
-
-/* USER CODE END FunctionPrototypes */
-
 void statusLedTask(void *argument);
 void iwdgResetTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
-/**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
 void MX_FREERTOS_Init(void) {
-    /* USER CODE BEGIN Init */
-
-    /* USER CODE END Init */
-
-    /* USER CODE BEGIN RTOS_MUTEX */
-    /* add mutexes, ... */
-    /* USER CODE END RTOS_MUTEX */
-
-    /* USER CODE BEGIN RTOS_SEMAPHORES */
-    /* add semaphores, ... */
-    /* USER CODE END RTOS_SEMAPHORES */
-
-    /* USER CODE BEGIN RTOS_TIMERS */
-    /* start timers, add new ones, ... */
-    /* USER CODE END RTOS_TIMERS */
-
-    /* USER CODE BEGIN RTOS_QUEUES */
-    /* add queues, ... */
-    /* USER CODE END RTOS_QUEUES */
-
-    /* Create the thread(s) */
-    /* creation of statusLed */
     iwdgResetHandle = osThreadNew(iwdgResetTask, NULL, &iwdgReset_attributes);
     statusLedHandle = osThreadNew(statusLedTask, NULL, &statusLed_attributes);
 
-    /* USER CODE BEGIN RTOS_THREADS */
-    /* add threads, ... */
-    /* USER CODE END RTOS_THREADS */
+    St_Queue_Handler = xQueueCreate(2, sizeof(my_struct));
 
-    /* USER CODE BEGIN RTOS_EVENTS */
-    /* add events, ... */
-    /* USER CODE END RTOS_EVENTS */
+    if (St_Queue_Handler == 0) { // if there is some error while creating queue
+        char *str = "Unable to create STRUCTURE Queue\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+    } else {
+        char *str = "STRUCTURE Queue Created successfully\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+    }
 
+    xTaskCreate(Sender1_Task, "SENDER1", TXRX_BUFFER_SIZE, NULL, 2, &Sender1_Task_Handler);
+    xTaskCreate(Sender2_Task, "SENDER2", TXRX_BUFFER_SIZE, NULL, 2, &Sender2_Task_Handler);
+    xTaskCreate(Receiver_Task, "RECEIVER", TXRX_BUFFER_SIZE, NULL, 1, &Receiver_Task_Handler);
 }
 
-/* USER CODE BEGIN Header_startStatusLed */
-/**
-  * @brief  Function implementing the statusLed thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_startStatusLed */
 void statusLedTask(void *argument) {
     /* USER CODE BEGIN startStatusLed */
     /* Infinite loop */
@@ -144,9 +97,83 @@ void iwdgResetTask(void *argument) {
     }
 }
 
-/* Private application code --------------------------------------------------*/
-/* USER CODE BEGIN Application */
+void Sender1_Task(void *argument) {
+    my_struct *ptrtostruct;
 
-/* USER CODE END Application */
+    uint32_t TickDelay = pdMS_TO_TICKS(2000);
+    while (1) {
+        char *str = "Entered SENDER1_Task\r\n about to SEND to the queue\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+        /****** ALOOCATE MEMORY TO THE PTR ********/
+        ptrtostruct = pvPortMalloc(sizeof(my_struct));
+
+        /********** LOAD THE DATA ***********/
+        ptrtostruct->counter = 1 + indx1;
+        ptrtostruct->large_value = 1000 + indx1 * 100;
+        ptrtostruct->str = "HELLO FROM SENDER 1 ";
+
+        /***** send to the queue ****/
+        if (xQueueSend(St_Queue_Handler, &ptrtostruct, portMAX_DELAY) == pdPASS) {
+            char *str2 = " Successfully sent the to the queue\r\nLeaving SENDER1_Task\r\n\n";
+            HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
+        }
+
+        indx1 = indx1 + 1;
+
+        vTaskDelay(TickDelay);
+    }
+}
+
+
+void Sender2_Task(void *argument) {
+    my_struct *ptrtostruct;
+
+    uint32_t TickDelay = pdMS_TO_TICKS(2000);
+    while (1) {
+        char *str = "Entered SENDER2 Task\r\n about to SEND to the queue\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+
+        /**** Allocate memory for the structure ****/
+        ptrtostruct = pvPortMalloc(sizeof(my_struct));
+
+        /**** Load the data into the Structure ****/
+        ptrtostruct->str = "Sender2 says Hii!!!";
+        ptrtostruct->large_value = 2000 + 200 * indx2;
+        ptrtostruct->counter = 1 + indx2;
+        if (xQueueSend(St_Queue_Handler, &ptrtostruct, portMAX_DELAY) == pdPASS) {
+            char *str2 = " Successfully sent the to the queue\r\nLeaving SENDER2_Task\r\n\n";
+            HAL_UART_Transmit(&huart3, (uint8_t *)str2, strlen(str2), HAL_MAX_DELAY);
+        }
+
+        indx2 = indx2 + 1;
+
+        vTaskDelay(TickDelay);
+    }
+
+}
+
+void Receiver_Task(void *argument) {
+    my_struct *Rptrtostruct;
+    uint32_t TickDelay = pdMS_TO_TICKS(3000);
+    char *ptr;
+
+    while (1) {
+        char *str = "Entered RECEIVER Task\r\n about to RECEIVE FROM the queue\r\n";
+        HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+
+        /**** RECEIVE FROM QUEUE *****/
+        if (xQueueReceive(St_Queue_Handler, &Rptrtostruct, portMAX_DELAY) == pdPASS) {
+            ptr = pvPortMalloc(100 * sizeof(char));  // allocate memory for the string
+
+            sprintf(ptr, "Received from QUEUE:\r\n COUNTER = %d\r\n LARGE VALUE = %u\r\n STRING = %s\r\n\n", Rptrtostruct->counter, Rptrtostruct->large_value, Rptrtostruct->str);
+            HAL_UART_Transmit(&huart3, (uint8_t *)ptr, strlen(ptr), HAL_MAX_DELAY);
+
+            vPortFree(ptr);  // free the string memory
+        }
+
+        vPortFree(Rptrtostruct);  // free the structure memory
+
+        vTaskDelay(TickDelay);
+    }
+}

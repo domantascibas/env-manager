@@ -4,6 +4,10 @@
         "cmsis_os.h": "c",
         "task.h": "c",
         "gpio.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "freertosconfig.h": "c",
+        "portable.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "usart.h": "c"
     }
 }
