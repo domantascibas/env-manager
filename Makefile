@@ -194,7 +194,10 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	@echo "Extracting $@"; $(BIN) $< $@
 	
 $(BUILD_DIR):
-	mkdir $@		
+	mkdir $@
+
+format:
+	@echo "Formatting..."; astyle --options=.astylerc --suffix=none --formatted --recursive Core/*.c,*.h
 
 #######################################
 # clean up

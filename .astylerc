@@ -1,0 +1,52 @@
+# void foo() {
+#     return;
+# }
+style=attach
+
+# if (a) {
+# ....foo();    
+# }
+indent=spaces=4
+
+# switch (a) {
+# ....case 1:
+#         break;
+# }
+indent-switches
+
+# void foobar(int a, int b
+# ........int x, int y, int z);
+indent-after-parens
+indent-continuation=2
+
+# a+b -> a + b
+# a,b -> a, b
+pad-oper
+
+# if(a) -> if (a)
+pad-header
+
+# a ( b ( c ) ) -> a(b(c))
+unpad-paren
+
+# void* a; -> void *a;
+align-pointer=name
+
+# void
+# foo() {} -> void foo() {}
+attach-return-type
+
+# void
+# foo(); -> void foo();
+attach-return-type-decl
+
+# if (a) { foo(); }
+keep-one-line-blocks
+
+# if (a) { 
+#     foo(); bar(); 
+# }
+keep-one-line-statements
+
+# ->| -> ....
+convert-tabs
