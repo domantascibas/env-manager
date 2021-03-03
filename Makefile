@@ -33,7 +33,9 @@ Core/Src/i2c.c \
 Core/Src/iwdg.c \
 Core/Src/rtc.c \
 Core/Src/spi.c \
+Core/Src/uart.c \
 Core/Src/usart.c \
+Core/Src/version.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_hal_timebase_tim.c \

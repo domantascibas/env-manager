@@ -10,6 +10,7 @@
 #include "wwdg.h"
 #include "gpio.h"
 #include "uart.h"
+#include "version.h"
 
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
@@ -20,7 +21,7 @@ int main(void) {
 
     MX_GPIO_Init();
     uart_init();
-    
+
     MX_ADC1_Init();
     MX_CRC_Init();
     MX_I2C1_Init();
@@ -29,6 +30,7 @@ int main(void) {
     MX_SPI1_Init();
     // MX_USART3_UART_Init();
     // MX_WWDG_Init();
+    print_version();
 
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
     MX_FREERTOS_Init();
@@ -54,7 +56,7 @@ void SystemClock_Config(void) {
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
         Error_Handler();
     }
-   
+
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
             | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
