@@ -36,6 +36,8 @@ Core/Src/spi.c \
 Core/Src/uart.c \
 Core/Src/usart.c \
 Core/Src/version.c \
+Core/Src/reset_source.c \
+Core/Src/drv_reset_source.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_hal_timebase_tim.c \

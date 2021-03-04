@@ -11,6 +11,9 @@
 #include "gpio.h"
 #include "uart.h"
 #include "version.h"
+#include "reset_source.h"
+
+#include "stdio.h"
 
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
@@ -18,10 +21,15 @@ void MX_FREERTOS_Init(void);
 int main(void) {
     HAL_Init();
     SystemClock_Config();
+    reset_source_init();
+
+    uart_init();
+    uint8_t reset_source = get_reset_source();
+    uint16_t len = snprintf(MSG, MSG_SIZE, "Reset source: 0x%02X\r\n", reset_source);
+    uart_print(MSG, len);
+    // PTS_f(uDEBUG, "Reset source: %02X", reset_source);    // NEKEISTI!!! Nes grius QA testai
 
     MX_GPIO_Init();
-    uart_init();
-
     MX_ADC1_Init();
     MX_CRC_Init();
     MX_I2C1_Init();
