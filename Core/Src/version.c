@@ -5,9 +5,8 @@
 #include "stdio.h"
 
 #define RELEASE_VER             "00.0a.00.01"
-#define RELEASE_VER_STR         RELEASE_VER
 
-const char version[VERSION_LENGTH] = RELEASE_VER_STR;
+const char version[VERSION_LENGTH] = RELEASE_VER;
 
 void print_version(void) {
     uint16_t len = snprintf(MSG, MSG_SIZE, "VERSIONS:\r\nFirmware version: %s\r\n", version);
