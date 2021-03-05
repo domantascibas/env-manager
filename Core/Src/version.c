@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stdio.h"
 
-#define RELEASE_VER             "00.0a.00.01"
+#define RELEASE_VER             "00.0A.00.02"
 
 const char version[VERSION_LENGTH] = RELEASE_VER;
 
