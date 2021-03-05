@@ -19,6 +19,7 @@
 #define TX_QUEUE_MAX_WAIT           1000
 #define CHAR_TX_TIMEOUT             5
 
+static char MSG[MAX_MESSAGE_LENGTH];
 UART_HandleTypeDef UartHandle;
 
 static xTaskHandle _TxTask;
@@ -62,7 +63,6 @@ void uart_HAL_init(void) {
 uint8_t uart_put_string(char *string) {
     if (xSemaphoreTake(_TxMutex, TX_SEMAPHORE_MAX_WAIT / portTICK_RATE_MS) == pdFAIL) {
         // check if uart dbg is enabled
-        // PTS("UART semphr tmo");
         HAL_UART_Transmit(&UartHandle, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
         return 0;
     }
@@ -82,7 +82,7 @@ uint8_t uart_put_string(char *string) {
 }
 
 void Uart_TxTask(void *arguments) {
-    // PTS("UART TX task started");
+    PTS("UART TX tsk start");
 //                      start RX interrupt
 
     typedef enum {
@@ -123,8 +123,6 @@ void Uart_TxTask(void *arguments) {
 void PTS(char *string) {
     uart_put_string(string);
 }
-
-static char MSG[MAX_MESSAGE_LENGTH];
 
 void PTS_f(const char *format, ...) {
     va_list argptr;
