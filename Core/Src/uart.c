@@ -65,21 +65,21 @@ void uart_HAL_init(void) {
 }
 
 uint8_t uart_put_string(char *string) {
-    if (xSemaphoreTake(_TxMutex, TX_SEMAPHORE_MAX_WAIT / portTICK_RATE_MS) == pdFAIL) {
+    if (xSemaphoreTake(_TxMutex, pdMS_TO_TICKS(TX_SEMAPHORE_MAX_WAIT)) == pdFAIL) {
         // check if uart dbg is enabled
         HAL_UART_Transmit(&UartHandle, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
         return 0;
     }
 
     while (*string != '\0') {
-        if (xQueueSend(_TxQueue, string, TX_QUEUE_MAX_WAIT / portTICK_RATE_MS) == pdPASS) {
+        if (xQueueSend(_TxQueue, string, pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT)) == pdPASS) {
             string++;
         } else {
             HAL_UART_Transmit(&UartHandle, (uint8_t *)"queue full\r\n", 14, HAL_MAX_DELAY);
         }
     }
-    xQueueSend(_TxQueue, "\r", TX_QUEUE_MAX_WAIT / portTICK_RATE_MS);
-    xQueueSend(_TxQueue, "\n", TX_QUEUE_MAX_WAIT / portTICK_RATE_MS);
+    xQueueSend(_TxQueue, "\r", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
+    xQueueSend(_TxQueue, "\n", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
 
     xSemaphoreGive(_TxMutex);
     return 1;
@@ -115,7 +115,7 @@ void Uart_TxTask(void *arguments) {
 
             case ST_SENDING:
                 HAL_UART_Transmit(&UartHandle, (uint8_t *)&c, 1, HAL_MAX_DELAY);
-                if (xQueueReceive(_TxQueue, &c, CHAR_TX_TIMEOUT / portTICK_RATE_MS) == pdFAIL) {
+                if (xQueueReceive(_TxQueue, &c, pdMS_TO_TICKS(CHAR_TX_TIMEOUT)) == pdFAIL) {
                     txTaskState = ST_IDLE;
                 }
                 break;
