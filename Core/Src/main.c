@@ -32,12 +32,12 @@ int main(void) {
     // MX_USART3_UART_Init();
     // MX_WWDG_Init();
 
-    uart_init();
-    PTS_f("Reset source: 0x%02X", get_reset_source());
-    print_mcu_id_code();
-    print_version();
-
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
+    uart_init();
+    // PTS_f("Reset source: 0x%02X", get_reset_source());
+    // print_mcu_id_code();
+    // print_version();
+    
     MX_FREERTOS_Init();
     osKernelStart();
 
