@@ -12,6 +12,5 @@
 #define LPWR_RS     0x80    // Low power reset
 
 uint8_t get_mcu_reset_source(void);
-void get_mcu_id_code(void);
 
 #endif

@@ -9,6 +9,5 @@
 const char version[VERSION_LENGTH] = RELEASE_VER;
 
 void print_version(void) {
-    uint16_t len = snprintf(MSG, MSG_SIZE, "VERSIONS:\r\nFirmware version: %s\r\n", version);
-    uart_print(MSG, len);
+    PTS_f("VERSIONS:\r\nFirmware version: %s\r\n", version);
 }
