@@ -29,7 +29,6 @@ int main(void) {
     MX_IWDG_Init();
     MX_RTC_Init();
     MX_SPI1_Init();
-    // MX_USART3_UART_Init();
     // MX_WWDG_Init();
 
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
@@ -37,7 +36,7 @@ int main(void) {
     PTS_f("Reset source: 0x%02X", get_reset_source());
     print_mcu_id_code();
     print_version();
-    
+
     MX_FREERTOS_Init();
     osKernelStart();
 

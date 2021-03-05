@@ -69,10 +69,10 @@ void MX_FREERTOS_Init(void) {
 
 //     if (St_Queue_Handler == 0) { // if there is some error while creating queue
 //         char *str = "Unable to create STRUCTURE Queue\r\n";
-        // HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+    // HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
 //     } else {
 //         char *str = "STRUCTURE Queue Created successfully\r\n";
-        // HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+    // HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
 //     }
 
 //     // xTaskCreate(Sender1_Task, "SENDER1", TXRX_BUFFER_SIZE, NULL, 2, &Sender1_Task_Handler);
@@ -82,7 +82,7 @@ void MX_FREERTOS_Init(void) {
 //     SimpleMutex = xSemaphoreCreateMutex();
 
 //     if (SimpleMutex != NULL) {
-        // HAL_UART_Transmit(&huart3, (uint8_t *)"Mutex Created\r\n\n", 15, 1000);
+    // HAL_UART_Transmit(&huart3, (uint8_t *)"Mutex Created\r\n\n", 15, 1000);
 //     }
 
 // /// create tasks
@@ -110,7 +110,7 @@ void statusLedTask(void *argument) {
 }
 
 void printBlinkTask(void *argument) {
-    while(1) {
+    while (1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
         PTS_dbg("blink: %d", xTaskGetTickCount());
         vTaskDelay(1006);
