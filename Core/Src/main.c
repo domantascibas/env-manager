@@ -6,7 +6,6 @@
 #include "iwdg.h"
 #include "rtc.h"
 #include "spi.h"
-#include "usart.h"
 #include "wwdg.h"
 #include "gpio.h"
 #include "uart.h"
@@ -23,12 +22,6 @@ int main(void) {
     SystemClock_Config();
     reset_source_init();
 
-    uart_init();
-    uint8_t reset_source = get_reset_source();
-    uint16_t len = snprintf(MSG, MSG_SIZE, "Reset source: 0x%02X\r\n", reset_source);
-    uart_print(MSG, len);
-    // PTS_f(uDEBUG, "Reset source: %02X", reset_source);    // NEKEISTI!!! Nes grius QA testai
-
     MX_GPIO_Init();
     MX_ADC1_Init();
     MX_CRC_Init();
@@ -38,6 +31,10 @@ int main(void) {
     MX_SPI1_Init();
     // MX_USART3_UART_Init();
     // MX_WWDG_Init();
+
+    uart_init();
+    PTS_f("Reset source: 0x%02X", get_reset_source());
+    print_mcu_id_code();
     print_version();
 
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
