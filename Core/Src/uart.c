@@ -11,6 +11,10 @@
 
 #include "main.h"
 
+static const char moduleStr[] = "UART";
+#define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
+#define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
+
 #define UART_INTERFACE_COUNT        1
 #define MAX_MESSAGE_LENGTH          64
 #define QUEUE_LENGTH                (MAX_MESSAGE_LENGTH * 8)
@@ -82,7 +86,7 @@ uint8_t uart_put_string(char *string) {
 }
 
 void Uart_TxTask(void *arguments) {
-    PTS("UART TX tsk start");
+    PTS_dbg("UART TX tsk start");
 //                      start RX interrupt
 
     typedef enum {
@@ -124,6 +128,28 @@ void PTS(char *string) {
     uart_put_string(string);
 }
 
+void PTS_d(const char *module, const char *format, ...) {
+    va_list argptr;
+    char *ptr = MSG;
+    int size = MAX_MESSAGE_LENGTH;
+    int nch;
+    // sendDateTimeString(uDEBUG);
+    nch = snprintf(ptr, size, "[%s]->", module);
+    ptr += nch;
+    size -= nch;
+    va_start(argptr, format);
+    vsnprintf(ptr, size, format, argptr);
+    PTS(MSG);
+    va_end(argptr);
+}
+
+// void PTS_t(int num, char *string) {
+//     // send current date/time to UART/USB
+//     sendDateTimeString(num);
+//     // put rest of the string (we came here with) to the UART using PTS()
+//     PTS(num, string);
+// }
+
 void PTS_f(const char *format, ...) {
     va_list argptr;
     va_start(argptr, format);
@@ -131,6 +157,31 @@ void PTS_f(const char *format, ...) {
     PTS(MSG);
     va_end(argptr);
 }
+
+void PTS_df(const char *module, const char *format, ...) {
+    va_list argptr;
+    char *ptr = MSG;
+    int size = MAX_MESSAGE_LENGTH;
+    int nch;
+    nch = snprintf(ptr, size, "[%s]->", module);
+    ptr += nch;
+    size -= nch;
+    va_start(argptr, format);
+    vsnprintf(ptr, size, format, argptr);
+    PTS(MSG);
+    va_end(argptr);
+}
+
+// void PTS_tf(int num, const char *format, ...) {
+//     va_list argptr;
+//     // send current date/time to UART/USB
+//     sendDateTimeString(num);
+//     // process va_list and send it to UART/USB using PTS()
+//     va_start(argptr, format);
+//     vsnprintf(MSG, MSG_size, format, argptr);
+//     PTS(num, MSG);
+//     va_end(argptr);
+// }
 
 // static void sendDateTimeString(uint8_t uartNum) {
 //     static char dtBin[8], dtStr[25];
@@ -149,26 +200,4 @@ void PTS_f(const char *format, ...) {
 //             TX_char(uartNum, dtStr[i]);
 //         }
 //     }
-// }
-
-// void PTS_t(int num, char *string) {
-//     // send current date/time to UART/USB
-//     sendDateTimeString(num);
-//     // put rest of the string (we came here with) to the UART using PTS()
-//     PTS(num, string);
-// }
-
-// void PTS_d(const char *module, const char *format, ...) {
-//     va_list argptr;
-//     char *ptr = MSG;
-//     int size = MSG_size;
-//     int nch;
-//     sendDateTimeString(uDEBUG);
-//     nch = snprintf(ptr, size, "[%s]->", module);
-//     ptr += nch;
-//     size -= nch;
-//     va_start(argptr, format);
-//     vsnprintf(ptr, size, format, argptr);
-//     PTS(uDEBUG, MSG);
-//     va_end(argptr);
 // }

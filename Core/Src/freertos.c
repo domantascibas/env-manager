@@ -10,6 +10,10 @@
 #include "string.h"
 #include "stdio.h"
 
+static const char moduleStr[] = "TSK";
+#define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
+#define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
+
 // #define TXRX_BUFFER_SIZE 128
 
 
@@ -89,7 +93,7 @@ void MX_FREERTOS_Init(void) {
 
 void iwdgResetTask(void *argument) {
     while (1) {
-        PTS_f("wdg upd");
+        PTS_dbg("wdg upd");
         vTaskDelay(4500);
         iwdgReset();
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
@@ -109,7 +113,7 @@ void printBlinkTask(void *argument) {
     uint16_t a = 0;
     while(1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-        PTS_f("blink: %d", a);
+        PTS_dbg("blink: %d", a);
         a++;
         if (a >= 65535) {
             a = 0;
