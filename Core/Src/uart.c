@@ -69,6 +69,7 @@ uint8_t uart_put_string(char *string) {
     if (xSemaphoreTake(_TxMutex, pdMS_TO_TICKS(TX_SEMAPHORE_MAX_WAIT)) == pdFAIL) {
         // check if uart dbg is enabled
         HAL_UART_Transmit(&UartHandle, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
+        xSemaphoreGive(_TxMutex);
         return 0;
     }
 
