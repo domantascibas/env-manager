@@ -57,9 +57,9 @@ void printBlinkTask(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 void MX_FREERTOS_Init(void) {
-    xTaskCreate(iwdgResetTask, "iwdgReset", configMINIMAL_STACK_SIZE, NULL, 3, &iwdgResetHandle);
-    xTaskCreate(statusLedTask, "statusLed", 128, NULL, 1, &statusLedHandle);
-    xTaskCreate(printBlinkTask, "blink", 128, NULL, 1, &printBlinkHandle);
+    xTaskCreate(iwdgResetTask, "iwdgReset", configMINIMAL_STACK_SIZE, NULL, 56, &iwdgResetHandle);
+    xTaskCreate(statusLedTask, "statusLed", configMINIMAL_STACK_SIZE, NULL, 1, &statusLedHandle);
+    xTaskCreate(printBlinkTask, "blink", configMINIMAL_STACK_SIZE, NULL, 1, &printBlinkHandle);
 
 //     St_Queue_Handler = xQueueCreate(2, sizeof(my_struct));
 
@@ -89,6 +89,7 @@ void MX_FREERTOS_Init(void) {
 
 void iwdgResetTask(void *argument) {
     while (1) {
+        PTS_f("wdg upd");
         vTaskDelay(4500);
         iwdgReset();
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);

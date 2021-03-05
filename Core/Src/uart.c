@@ -12,19 +12,24 @@
 #include "main.h"
 
 #define UART_INTERFACE_COUNT        1
-#define QUEUE_MAX_ITEMS             128
-#define QUEUE_ITEM_SIZE             1
+#define MAX_MESSAGE_LENGTH          64
+#define QUEUE_LENGTH                (MAX_MESSAGE_LENGTH * 8)
+#define QUEUE_ITEM_SIZE             sizeof(uint8_t)
 #define TX_SEMAPHORE_MAX_WAIT       1000
 #define TX_QUEUE_MAX_WAIT           1000
-#define MAX_MESSAGE_LENGTH          QUEUE_MAX_ITEMS
 #define CHAR_TX_TIMEOUT             5
 
 UART_HandleTypeDef UartHandle;
 
 static xTaskHandle _TxTask;
+static xSemaphoreHandle _TxMutex;
+static StaticQueue_t _TxQueueBuffer;
+static StaticQueue_t _RxQueueBuffer;
 static xQueueHandle _TxQueue;
 static xQueueHandle _RxQueue;
-static xSemaphoreHandle _TxMutex;
+
+uint8_t TxBuffer[QUEUE_LENGTH * QUEUE_ITEM_SIZE];
+uint8_t RxBuffer[QUEUE_LENGTH * QUEUE_ITEM_SIZE];
 
 void uart_HAL_init(void);
 uint8_t uart_put_string(char *string);
@@ -32,11 +37,11 @@ void Uart_TxTask(void *arguments);
 
 void uart_init(void) {
     uart_HAL_init();
-    _TxQueue = xQueueCreate(QUEUE_MAX_ITEMS, QUEUE_ITEM_SIZE);
-    _RxQueue = xQueueCreate(QUEUE_MAX_ITEMS, QUEUE_ITEM_SIZE);
+    _TxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(TxBuffer[0]), &_TxQueueBuffer);
+    _RxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(RxBuffer[0]), &_RxQueueBuffer);
     _TxMutex = xSemaphoreCreateMutex();
 
-    xTaskCreate(Uart_TxTask, "UART TX Task", 128, NULL, 1, &_TxTask);
+    xTaskCreate(Uart_TxTask, "UART TX Task", 128 * 1, NULL, 1, &_TxTask);
     PTS("\r\n*** STARTUP ***");
 }
 
@@ -57,13 +62,17 @@ void uart_HAL_init(void) {
 uint8_t uart_put_string(char *string) {
     if (xSemaphoreTake(_TxMutex, TX_SEMAPHORE_MAX_WAIT / portTICK_RATE_MS) == pdFAIL) {
         // check if uart dbg is enabled
-        PTS("UART semphr tmo");
+        // PTS("UART semphr tmo");
+        HAL_UART_Transmit(&UartHandle, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
         return 0;
     }
 
     while (*string != '\0') {
-        xQueueSend(_TxQueue, string, TX_QUEUE_MAX_WAIT / portTICK_RATE_MS);
-        string++;
+        if (xQueueSend(_TxQueue, string, TX_QUEUE_MAX_WAIT / portTICK_RATE_MS) == pdPASS) {
+            string++;
+        } else {
+            HAL_UART_Transmit(&UartHandle, (uint8_t *)"queue full\r\n", 14, HAL_MAX_DELAY);
+        }
     }
     xQueueSend(_TxQueue, "\r", TX_QUEUE_MAX_WAIT / portTICK_RATE_MS);
     xQueueSend(_TxQueue, "\n", TX_QUEUE_MAX_WAIT / portTICK_RATE_MS);
@@ -73,7 +82,7 @@ uint8_t uart_put_string(char *string) {
 }
 
 void Uart_TxTask(void *arguments) {
-    PTS("UART TX task started");
+    // PTS("UART TX task started");
 //                      start RX interrupt
 
     typedef enum {

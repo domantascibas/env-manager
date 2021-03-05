@@ -36,7 +36,7 @@ int main(void) {
     uart_init();
     PTS_f("Reset source: 0x%02X", get_reset_source());
     print_mcu_id_code();
-    // print_version();
+    print_version();
     
     MX_FREERTOS_Init();
     osKernelStart();
