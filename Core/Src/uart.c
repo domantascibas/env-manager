@@ -132,7 +132,43 @@ void PTS_f(const char *format, ...) {
     va_end(argptr);
 }
 
-// int UART_rxByte(int uartNo) {
-//     if (uartNo >= UART_INTERFACE_CNT) return -1;
-//     return Queue_popByte(uartData[uartNo].rxQueue);
+// static void sendDateTimeString(uint8_t uartNum) {
+//     static char dtBin[8], dtStr[25];
+//     uint8_t i = 0;
+//     // Make current date/time string
+//     RTC_unix_to_time(0, 0, dtBin);
+//     snprintf(dtStr, 25, "[%02d%02d.%02d.%02d %02d:%02d:%02d|%01d]-", dtBin[0], dtBin[1], dtBin[2], dtBin[3], dtBin[4], dtBin[5], dtBin[6], dtBin[7]);
+//     // put this string to the USB
+//     if (uartNum == uDEBUG && USB_debug == 1) {
+//         VCP_len(dtStr, 24);
+//     }
+//     if (UART_debug == 1) {
+//         rtt_print_no_crlf((uint8_t *)dtStr, 24);
+//         // put this string to the UART
+//         for (i = 0; i < 24; i++) {
+//             TX_char(uartNum, dtStr[i]);
+//         }
+//     }
+// }
+
+// void PTS_t(int num, char *string) {
+//     // send current date/time to UART/USB
+//     sendDateTimeString(num);
+//     // put rest of the string (we came here with) to the UART using PTS()
+//     PTS(num, string);
+// }
+
+// void PTS_d(const char *module, const char *format, ...) {
+//     va_list argptr;
+//     char *ptr = MSG;
+//     int size = MSG_size;
+//     int nch;
+//     sendDateTimeString(uDEBUG);
+//     nch = snprintf(ptr, size, "[%s]->", module);
+//     ptr += nch;
+//     size -= nch;
+//     va_start(argptr, format);
+//     vsnprintf(ptr, size, format, argptr);
+//     PTS(uDEBUG, MSG);
+//     va_end(argptr);
 // }
