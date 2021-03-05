@@ -39,6 +39,7 @@ uint8_t RxBuffer[QUEUE_LENGTH * QUEUE_ITEM_SIZE];
 void uart_HAL_init(void);
 uint8_t uart_put_string(char *string);
 void Uart_TxTask(void *arguments);
+// static void sendDateTimeString(uint8_t uartNum);
 
 void uart_init(void) {
     uart_HAL_init();
