@@ -34,8 +34,8 @@ int main(void) {
 
     osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
     uart_init();
-    // PTS_f("Reset source: 0x%02X", get_reset_source());
-    // print_mcu_id_code();
+    PTS_f("Reset source: 0x%02X", get_reset_source());
+    print_mcu_id_code();
     // print_version();
     
     MX_FREERTOS_Init();

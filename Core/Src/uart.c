@@ -12,7 +12,7 @@
 #include "main.h"
 
 #define UART_INTERFACE_COUNT        1
-#define QUEUE_MAX_ITEMS             64
+#define QUEUE_MAX_ITEMS             128
 #define QUEUE_ITEM_SIZE             1
 #define TX_SEMAPHORE_MAX_WAIT       1000
 #define TX_QUEUE_MAX_WAIT           1000

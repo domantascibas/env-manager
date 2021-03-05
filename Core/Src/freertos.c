@@ -108,8 +108,7 @@ void printBlinkTask(void *argument) {
     uint16_t a = 0;
     while(1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-        // PTS_f("blink: %d", a);
-        PTS("blink");
+        PTS_f("blink: %d", a);
         a++;
         if (a >= 65535) {
             a = 0;
