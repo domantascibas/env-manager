@@ -113,7 +113,7 @@ void printBlinkTask(void *argument) {
     while(1) {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
         PTS_dbg("blink: %d", xTaskGetTickCount());
-        vTaskDelay(1000);
+        vTaskDelay(1006);
     }
 }
 
