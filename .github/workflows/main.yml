@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    # Get the arm-non-eabi-gcc toolchain
+    - name: Install arm-none-eabi-gcc
+      uses: fiam/arm-none-eabi-gcc@v1
+      with:
+        # The arm-none-eabi-gcc release to use.
+        release: "9-2019-q4"
+    #- name: make format
+     # run: make format
+    - name: make all
+      run: make all
