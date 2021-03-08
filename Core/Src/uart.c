@@ -41,6 +41,23 @@ uint8_t uart_put_string(char *string);
 void Uart_TxTask(void *arguments);
 // static void sendDateTimeString(uint8_t uartNum);
 
+uint8_t RX1_Char;
+
+void USART3_IRQHandler(void) {
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    HAL_UART_IRQHandler(&UartHandle);
+	HAL_UART_Receive_IT(&UartHandle, &RX1_Char, 1);
+    xQueueSendFromISR(_TxQueue, &RX1_Char, &xHigherPriorityTaskWoken);
+
+    if (RX1_Char == '1') {
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
+    }
+
+    if( xHigherPriorityTaskWoken ) {
+        taskYIELD();
+    }
+}
+
 void uart_init(void) {
     uart_HAL_init();
     _TxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(TxBuffer[0]), &_TxQueueBuffer);
