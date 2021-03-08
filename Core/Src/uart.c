@@ -115,6 +115,7 @@ void Uart_TxTask(void *arguments) {
     } txTaskState_t;
 
     txTaskState_t txTaskState = ST_INIT;
+    HAL_UART_Receive_IT(&UartHandle, &RX1_Char, 1);
 
     while (1) {
         char c;
