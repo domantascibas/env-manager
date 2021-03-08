@@ -47,7 +47,7 @@ void uart_init(void) {
     _RxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(RxBuffer[0]), &_RxQueueBuffer);
     _TxMutex = xSemaphoreCreateMutex();
 
-    xTaskCreate(Uart_TxTask, "UART TX Task", 128 * 1, NULL, 1, &_TxTask);
+    xTaskCreate(Uart_TxTask, "UART TX Task", 128 * 1, NULL, 16, &_TxTask);
     PTS("\r\n*** STARTUP ***");
 }
 
