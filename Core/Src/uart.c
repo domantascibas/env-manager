@@ -3,6 +3,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "commands.h"
 
 #include "main.h"
 
