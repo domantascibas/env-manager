@@ -2,6 +2,10 @@
 #define _UART_H
 
 #include "stm32f1xx_hal.h"
+#include "stdarg.h"
+#include "stdint.h"
+#include "stdio.h"
+#include "string.h"
 
 void uart_init(void);
 void PTS(char *string);
