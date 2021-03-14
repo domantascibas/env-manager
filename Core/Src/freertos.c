@@ -1,11 +1,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include "cmsis_os.h"
 #include "iwdg.h"
-#include "queue.h"
 #include "uart.h"
-#include "semphr.h"
 
 #include "string.h"
 #include "stdio.h"
