@@ -35,7 +35,7 @@ Core/Src/rtc.c \
 Core/Src/spi.c \
 Core/Src/uart.c \
 Core/Src/usart.c \
-Core/Src/commands.c \
+Core/Src/cmd_parser.c \
 Core/Src/version.c \
 Core/Src/reset_source.c \
 Core/Src/drv_reset_source.c \

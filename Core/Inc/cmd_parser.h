@@ -1,5 +1,5 @@
-#ifndef _COMMANDS_H_
-#define _COMMANDS_H_
+#ifndef _CMD_PARSER_H_
+#define _CMD_PARSER_H_
 
 #include "stdint.h"
 
