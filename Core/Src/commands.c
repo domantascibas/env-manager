@@ -15,6 +15,13 @@ void CmdGetVersion(void);
 void CmdGetReset(void);
 void CmdGetVref(void);
 
+const CommandStruct_t commands[] = {
+    {"get,ver",         &CmdGetVersion,         "Display firmware version"},
+    {"get,reset",       &CmdGetReset,           "Display reset source"},
+    {"get,vref",        &CmdGetVref,            "Print Vref"},
+    {"", 0, ""}     // End of table indicator. MUST BE LAST!!!
+};
+
 void device_info(void) {
     PTS_f("DEVICE INFO\r\nDevice reset source: %02X", get_reset_source());//\r\nDevice UpTime: %d s", reset_source_ret(), getDeviceUpTime());
     print_version();
