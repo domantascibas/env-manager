@@ -174,6 +174,7 @@ void Uart_RxTask(void *arguments) {
 
                 if ((CmdBuffer[idx - 1] == '\r' && CmdBuffer[idx - 2] == '\n') || (CmdBuffer[idx - 1] == '\n' && CmdBuffer[idx - 2] == '\r')) {
                     memset(&CmdBuffer[idx - 2], '\0', 2);
+                    idx-=2;
                     parse_cmd(CmdBuffer, idx);
                     clear_RxBuffer(&idx);
                 }
