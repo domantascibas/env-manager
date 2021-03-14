@@ -1,9 +1,12 @@
+#include "FreeRTOS.h"
+#include "task.h"
 #include "cmd_parser.h"
 #include "stdlib.h"
 #include "version.h"
 #include "reset_source.h"
 #include "uart.h"
 
+#define CMD_DEBUG_EN            0
 #define MAX_ITEM_COUNT          8
 static const char DELIM = ',';
 
@@ -11,23 +14,64 @@ static const char moduleStr[] = "CMD";
 #define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 
+void CmdHelp(void);
+void CmdGetInfo(void);
 void CmdGetVersion(void);
-void CmdGetReset(void);
 void CmdGetVref(void);
 
 const CommandStruct_t commands[] = {
-    {"get,ver",         &CmdGetVersion,         "Display firmware version"},
-    {"get,reset",       &CmdGetReset,           "Display reset source"},
-    {"get,vref",        &CmdGetVref,            "Print Vref"},
-    {"", 0, ""}     // End of table indicator. MUST BE LAST!!!
+    {"help",            &CmdHelp,               "Print all commands"},
+    {"info",            &CmdGetInfo,            "Display device information"},
+    {"version",         &CmdGetVersion,         "Display firmware version"},
+    {"vref",            &CmdGetVref,            "Print Vref"},
+    {NULL,              NULL,                   NULL}     // End of table indicator. MUST BE LAST!!!
 };
 
-void device_info(void) {
-    PTS_f("DEVICE INFO\r\nDevice reset source: %02X", get_reset_source());//\r\nDevice UpTime: %d s", reset_source_ret(), getDeviceUpTime());
-    print_version();
+void parse_cmd(uint8_t *cmd, uint16_t sz) {
+    uint8_t i;
+    for (i = 0; i < sizeof(commands) / sizeof(CommandStruct_t); i++) {
+#if CMD_DEBUG_EN
+        PTS_dbg_f("cmd[%d]:%s, cmd:%s, eq?:%d", i, commands[i].name, cmd, strcmp(commands[i].name, cmd));
+#endif
+        if (strcmp(commands[i].name, (char *)cmd) == 0) {
+#if CMD_DEBUG_EN
+            PTS_dbg_f("cmd: %s, %s", commands[i].name, commands[i].help);
+#endif
+            commands[i].execute();
+            return;
+        }
+    }
+    PTS_dbg("unknown cmd");
 }
 
-void parse_cmd(uint8_t *cmd, uint16_t sz) {
+void CmdHelp(void) {
+    PTS_f("Available commands:");
+    uint8_t i;
+    for (i = 0; i < sizeof(commands) / sizeof(CommandStruct_t); i++) {
+        if (commands[i].name == NULL) break;
+        PTS_f(" - %-12s %s", commands[i].name, commands[i].help);
+    }
+    PTS("");
+}
+
+void CmdGetInfo(void) {
+    PTS("DEVICE INFO");
+    print_mcu_id_code();
+    print_reset_source();
+    PTS_f("Up-time: %ld s", xTaskGetTickCount() / 1000 + 1);
+    print_version();
+    PTS("");
+}
+
+void CmdGetVersion(void) {
+    print_version_str();
+}
+
+void CmdGetVref(void) {
+    PTS_dbg("vref cmd");
+}
+
+void adv_parse_cmd(uint8_t *cmd, uint16_t sz) {
     uint8_t pos = 0;
     // uint16_t shift_len = 0;
     uint8_t items_return = 0;
@@ -116,16 +160,4 @@ void parse_cmd(uint8_t *cmd, uint16_t sz) {
     // }
     PTS_dbg_f("items ret:%d", items_return);
     PTS_dbg("------------------");
-}
-
-void CmdGetVersion(void) {
-    PTS_dbg("version cmd");
-}
-
-void CmdGetReset(void) {
-    PTS_dbg("reset source cmd");
-}
-
-void CmdGetVref(void) {
-    PTS_dbg("vref cmd");
 }

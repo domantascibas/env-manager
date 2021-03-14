@@ -9,5 +9,9 @@
 const char version[VERSION_LENGTH] = RELEASE_VER;
 
 void print_version(void) {
-    PTS_f("VERSIONS:\r\nFirmware version: %s\r\n", version);
+    PTS_f("VERSIONS:\r\n  Firmware version: %s", version);
+}
+
+void print_version_str(void) {
+    PTS_f("%s", version);
 }
