@@ -17,6 +17,10 @@ uint8_t RS_power_reset(void) {
     return (reset_src & POR_RS) ? 1 : 0;
 }
 
+void print_reset_source(void) {
+    PTS_f("Reset source: 0x%02X", reset_src);
+}
+
 void print_mcu_id_code(void) {
     uint32_t val = DBGMCU->IDCODE;
     uint8_t revid = '?';
