@@ -5,6 +5,7 @@
 #include "version.h"
 #include "reset_source.h"
 #include "uart.h"
+#include "task_manager.h"
 
 #define CMD_DEBUG_EN            0
 #define MAX_ITEM_COUNT          8
@@ -18,12 +19,14 @@ void CmdHelp(void);
 void CmdGetInfo(void);
 void CmdGetVersion(void);
 void CmdGetVref(void);
+void CmdBlink(void);
 
 const CommandStruct_t commands[] = {
     {"help",            &CmdHelp,               "Print all commands"},
     {"info",            &CmdGetInfo,            "Display device information"},
     {"version",         &CmdGetVersion,         "Display firmware version"},
     {"vref",            &CmdGetVref,            "Print Vref"},
+    {"blink",            &CmdBlink,              "blink"},
     {NULL,              NULL,                   NULL}     // End of table indicator. MUST BE LAST!!!
 };
 
@@ -69,6 +72,10 @@ void CmdGetVersion(void) {
 
 void CmdGetVref(void) {
     PTS_dbg("vref cmd");
+}
+
+void CmdBlink(void) {
+    task_toggle();
 }
 
 void adv_parse_cmd(uint8_t *cmd, uint16_t sz) {
