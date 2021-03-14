@@ -1,11 +1,20 @@
 #include "status_led.h"
 #include "stm32f1xx_hal.h"
+#include "uart.h"
 
-xTaskHandle statusLedHandle;
-
-void statusLedTask(void *argument) {
+void _tStatusLed(void *argument) {
     while (1) {
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
+        vTaskDelay(4500);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
         vTaskDelay(100);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+    }
+}
+
+void _tPrintBlink(void *argument) {
+    while (1) {
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+        PTS_f("blink: %d", xTaskGetTickCount());
+        vTaskDelay(1006);
     }
 }

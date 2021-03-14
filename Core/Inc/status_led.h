@@ -4,7 +4,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-extern xTaskHandle statusLedHandle;
-void statusLedTask(void *argument);
+void _tStatusLed(void *argument);
+void _tPrintBlink(void *argument);
 
 #endif

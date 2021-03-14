@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "version.h"
 #include "reset_source.h"
+#include "task_manager.h"
 
 #include "stdio.h"
 
@@ -18,25 +19,30 @@ void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 
 int main(void) {
+    MX_IWDG_Init();
+    
+    /* system init */
     HAL_Init();
     SystemClock_Config();
     reset_source_init();
 
+    /* hw init */
     MX_GPIO_Init();
-    MX_ADC1_Init();
-    MX_CRC_Init();
-    MX_I2C1_Init();
-    MX_IWDG_Init();
-    MX_RTC_Init();
-    MX_SPI1_Init();
-    // MX_WWDG_Init();
-
-    osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
     uart_init();
+
+    /* else init. should start from task manager*/
+    // MX_ADC1_Init();
+    // MX_CRC_Init();
+    // MX_I2C1_Init();
+    // MX_RTC_Init();
+    // MX_SPI1_Init();
+    // // MX_WWDG_Init();
     print_reset_source();
     print_mcu_id_code();
     print_version();
 
+    osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
+    task_manager_init();
     osKernelStart();
 
     while (1) {
