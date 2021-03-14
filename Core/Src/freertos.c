@@ -19,7 +19,6 @@ void printBlinkTask(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 void MX_FREERTOS_Init(void) {
-    xTaskCreate(iwdgResetTask, "iwdgReset", configMINIMAL_STACK_SIZE, NULL, 1, &iwdgResetHandle);
     // xTaskCreate(statusLedTask, "statusLed", configMINIMAL_STACK_SIZE, NULL, 16, &statusLedHandle);
     xTaskCreate(printBlinkTask, "blink", configMINIMAL_STACK_SIZE, NULL, 16, &printBlinkHandle);
 }

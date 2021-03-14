@@ -81,8 +81,14 @@ void SystemClock_Config(void) {
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    static uint8_t count = 0;
     if (htim->Instance == TIM1) {
         HAL_IncTick();
+        count++;
+        if (count >= 10) {
+            iwdgReset();
+            count = 0;
+        }
     }
 }
 
