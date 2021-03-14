@@ -7,6 +7,8 @@
 #include "stdio.h"
 #include "string.h"
 
+#define MAX_MESSAGE_LENGTH          64
+
 void uart_init(void);
 void PTS(char *string);
 void PTS_d(const char *module, const char *format, ...);

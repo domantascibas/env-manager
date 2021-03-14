@@ -12,7 +12,6 @@ static const char moduleStr[] = "UART";
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 
 #define UART_INTERFACE_COUNT        1
-#define MAX_MESSAGE_LENGTH          64
 #define QUEUE_LENGTH                (MAX_MESSAGE_LENGTH * 8)
 #define QUEUE_ITEM_SIZE             sizeof(uint8_t)
 #define TX_SEMAPHORE_MAX_WAIT       1000
