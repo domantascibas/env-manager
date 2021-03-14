@@ -4,10 +4,7 @@
 #include "iwdg.h"
 #include "uart.h"
 
-#include "string.h"
-#include "stdio.h"
-
-static const char moduleStr[] = "TSK";
+static const char moduleStr[] = "FRTOS_TSK";
 #define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 

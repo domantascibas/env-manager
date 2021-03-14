@@ -27,6 +27,7 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/gpio.c \
 Core/Src/freertos.c \
+Core/Src/task_manager.c \
 Core/Src/adc.c \
 Core/Src/crc.c \
 Core/Src/i2c.c \
