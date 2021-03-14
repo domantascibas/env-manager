@@ -37,7 +37,6 @@ int main(void) {
     print_mcu_id_code();
     print_version();
 
-    MX_FREERTOS_Init();
     osKernelStart();
 
     while (1) {
