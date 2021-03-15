@@ -26,7 +26,7 @@ const CommandStruct_t commands[] = {
     {"info",            &CmdGetInfo,            "Display device information"},
     {"version",         &CmdGetVersion,         "Display firmware version"},
     {"vref",            &CmdGetVref,            "Print Vref"},
-    {"blink",            &CmdBlink,              "blink"},
+    {"blink",           &CmdBlink,              "blink"},
     {NULL,              NULL,                   NULL}     // End of table indicator. MUST BE LAST!!!
 };
 

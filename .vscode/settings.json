@@ -17,6 +17,7 @@
         "stm32f103xb.h": "c",
         "uart.h": "c",
         "task_manager.h": "c",
-        "status_led.h": "c"
+        "status_led.h": "c",
+        "typeinfo": "c"
     }
 }
