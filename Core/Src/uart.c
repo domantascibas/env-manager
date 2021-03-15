@@ -20,7 +20,7 @@ static char MSG[MAX_MESSAGE_LENGTH];
 UART_HandleTypeDef UartHandle;
 
 static xTaskHandle _hUartTx;
-static xTaskHandle _hUartRx;
+// static xTaskHandle _hUartRx;
 static xSemaphoreHandle _TxMutex;
 // static xSemaphoreHandle _RxMutex;
 static StaticQueue_t _TxQueueBuffer;
@@ -58,7 +58,7 @@ void uart_init(void) {
 
     PTS("\r\n*** STARTUP ***");
     xTaskCreate(_tUartTx, "UART TX Task", 128 * 1, NULL, 16, &_hUartTx);
-    xTaskCreate(_tUartRx, "UART RX Task", 128 * 2, NULL, 16, &_hUartRx);
+    // xTaskCreate(_tUartRx, "UART RX Task", 128 * 2, NULL, 16, &_hUartRx);
 }
 
 void uart_HAL_init(void) {
