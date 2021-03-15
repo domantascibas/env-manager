@@ -46,6 +46,11 @@ void _tTaskManager(void *argument) {
             PTS_dbg_f(" +%-16s START", task->name);
         }
     }
+
+    // while(1) {
+    //     /* print some task statistics */
+    // }
+
     vTaskDelete(_hTaskManager);
 }
 
