@@ -21,8 +21,8 @@ static const char moduleStr[] = "UART";
 static char MSG[MAX_MESSAGE_LENGTH];
 UART_HandleTypeDef UartHandle;
 
-static xTaskHandle _TxTask;
-static xTaskHandle _RxTask;
+static xTaskHandle _hUartTx;
+static xTaskHandle _hUartRx;
 static xSemaphoreHandle _TxMutex;
 // static xSemaphoreHandle _RxMutex;
 static StaticQueue_t _TxQueueBuffer;
@@ -36,8 +36,6 @@ uint8_t CmdBuffer[MAX_MESSAGE_LENGTH * QUEUE_ITEM_SIZE];
 
 void uart_HAL_init(void);
 uint8_t uart_put_string(char *string);
-void Uart_TxTask(void *arguments);
-void Uart_RxTask(void *arguments);
 void clear_RxBuffer(uint8_t *idx);
 // static void sendDateTimeString(uint8_t uartNum);
 
@@ -60,9 +58,9 @@ void uart_init(void) {
     _RxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(RxBuffer[0]), &_RxQueueBuffer);
     _TxMutex = xSemaphoreCreateMutex();
 
-    xTaskCreate(Uart_TxTask, "UART TX Task", 128 * 1, NULL, 16, &_TxTask);
-    xTaskCreate(Uart_RxTask, "UART RX Task", 128 * 2, NULL, 16, &_RxTask);
     PTS("\r\n*** STARTUP ***");
+    xTaskCreate(_tUartTx, "UART TX Task", 128 * 1, NULL, 16, &_hUartTx);
+    xTaskCreate(_tUartRx, "UART RX Task", 128 * 2, NULL, 16, &_hUartRx);
 }
 
 void uart_HAL_init(void) {
@@ -101,7 +99,7 @@ uint8_t uart_put_string(char *string) {
     return 1;
 }
 
-void Uart_TxTask(void *arguments) {
+void _tUartTx(void *arguments) {
     PTS_dbg("UART TX tsk start");
 
     typedef enum {
@@ -139,7 +137,7 @@ void Uart_TxTask(void *arguments) {
     }
 }
 
-void Uart_RxTask(void *arguments) {
+void _tUartRx(void *arguments) {
     PTS_dbg("UART RX tsk start");
 
     typedef enum {

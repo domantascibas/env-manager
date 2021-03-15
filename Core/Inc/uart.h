@@ -10,6 +10,9 @@
 #define MAX_MESSAGE_LENGTH          64
 
 void uart_init(void);
+void _tUartTx(void *arguments);
+void _tUartRx(void *arguments);
+
 void PTS(char *string);
 void PTS_d(const char *module, const char *format, ...);
 // void PTS_t(int num, char *string);
