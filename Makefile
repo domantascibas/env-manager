@@ -25,6 +25,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
+Core/Src/init.c \
 Core/Src/gpio.c \
 Core/Src/task_manager.c \
 Core/Src/status_led.c \
