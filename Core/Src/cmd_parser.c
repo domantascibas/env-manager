@@ -32,7 +32,7 @@ const CommandStruct_t commands[] = {
 
 void parse_cmd(uint8_t *cmd, uint16_t sz) {
     uint8_t i;
-    for (i = 0; i < sizeof(commands) / sizeof(CommandStruct_t); i++) {
+    for (i = 0; i < SIZEOF(commands); i++) {
 #if CMD_DEBUG_EN
         PTS_dbg_f("cmd[%d]:%s, cmd:%s, eq?:%d", i, commands[i].name, cmd, strcmp(commands[i].name, cmd));
 #endif
@@ -50,7 +50,7 @@ void parse_cmd(uint8_t *cmd, uint16_t sz) {
 void CmdHelp(void) {
     PTS_f("Available commands:");
     uint8_t i;
-    for (i = 0; i < sizeof(commands) / sizeof(CommandStruct_t); i++) {
+    for (i = 0; i < SIZEOF(commands); i++) {
         if (commands[i].name == NULL) break;
         PTS_f(" - %-12s %s", commands[i].name, commands[i].help);
     }
