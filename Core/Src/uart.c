@@ -1,6 +1,7 @@
-#include "uart.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "uart.h"
+#include "task_manager.h"
 #include "queue.h"
 #include "semphr.h"
 #include "cmd_parser.h"
