@@ -155,7 +155,6 @@ void _tUartRx(void *arguments) {
 
             case RX_RECEIVING:
                 CmdBuffer[idx] = c;
-                HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
                 idx++;
                 if (xQueueReceive(_RxQueue, &c, pdMS_TO_TICKS(CHAR_TX_TIMEOUT)) == pdFAIL) {
                     rxTaskState = RX_IDLE;
