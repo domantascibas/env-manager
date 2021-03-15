@@ -1,5 +1,4 @@
 #include "main.h"
-#include "cmsis_os.h"
 #include "adc.h"
 #include "crc.h"
 #include "i2c.h"
@@ -13,23 +12,14 @@
 #include "reset_source.h"
 #include "task_manager.h"
 
-#include "stdio.h"
-
+void system_init(void);
+void hw_init(void);
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
 
 int main(void) {
     MX_IWDG_Init();
-    
-    /* system init */
-    HAL_Init();
-    SystemClock_Config();
-    reset_source_init();
-
-    /* hw init */
-    MX_GPIO_Init();
-    uart_init();
-
+    system_init();
+    hw_init();
     /* else init. should start from task manager*/
     // MX_ADC1_Init();
     // MX_CRC_Init();
@@ -41,12 +31,24 @@ int main(void) {
     print_mcu_id_code();
     print_version();
 
-    osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
-    task_manager_init();
-    osKernelStart();
+    taskStart(taskTskManager);
+    vTaskStartScheduler();
 
     while (1) {
     }
+}
+
+void system_init(void) {
+    /* system init */
+    HAL_Init();
+    SystemClock_Config();
+    reset_source_init();
+}
+
+void hw_init(void) {
+    /* hw init */
+    MX_GPIO_Init();
+    uart_init();
 }
 
 void SystemClock_Config(void) {
