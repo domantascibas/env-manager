@@ -24,12 +24,11 @@ typedef struct {
     const configSTACK_DEPTH_TYPE stack_size;
     UBaseType_t priority;
     uint8_t autorun;
-    uint8_t state;
 } taskStruct_t;
 
-static taskStruct_t tasks[] = {
-    {"statusLed",           _tStatusLed,        &_hStatusLed,        NULL,       configMINIMAL_STACK_SIZE,       16,        1,      0},
-    {"printBlink",          _tPrintBlink,       &_hPrintBlink,       NULL,       configMINIMAL_STACK_SIZE,       16,        0,      0},
+const static taskStruct_t tasks[] = {
+    {"statusLed",           _tStatusLed,        &_hStatusLed,        NULL,       configMINIMAL_STACK_SIZE,       16,        1},
+    {"printBlink",          _tPrintBlink,       &_hPrintBlink,       NULL,       configMINIMAL_STACK_SIZE,       16,        0},
 };
 
 void task_manager_init(void) {
@@ -38,7 +37,7 @@ void task_manager_init(void) {
 
 void _tTaskManager(void *argument) {
     uint8_t i;
-    taskStruct_t* task;
+    const taskStruct_t* task;
 
     for (i = 0; i < SIZEOF(tasks); i++) {
         task = &tasks[i];
@@ -51,7 +50,7 @@ void _tTaskManager(void *argument) {
 }
 
 void task_toggle(void) {
-    taskStruct_t* task = &tasks[1];
+    const taskStruct_t* task = &tasks[1];
     // PTS_dbg_f(" %s-16s handle:%d", task->name, *task->handle);
 
     if (*task->handle == 0) {
