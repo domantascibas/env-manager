@@ -20,7 +20,6 @@ static const char moduleStr[] = "UART";
 static char MSG[MAX_MESSAGE_LENGTH];
 UART_HandleTypeDef UartHandle;
 
-static xTaskHandle _hUartTx;
 static xSemaphoreHandle _TxMutex;
 // static xSemaphoreHandle _RxMutex;
 static StaticQueue_t _TxQueueBuffer;
@@ -57,7 +56,7 @@ void uart_init(void) {
     _TxMutex = xSemaphoreCreateMutex();
 
     PTS("\r\n*** STARTUP ***");
-    xTaskCreate(_tUartTx, "UART TX Task", 128 * 1, NULL, 16, &_hUartTx);
+    taskStart(taskUartTx);
     taskStart(taskUartRx);
 }
 
@@ -98,8 +97,6 @@ uint8_t uart_put_string(char *string) {
 }
 
 void _tUartTx(void *arguments) {
-    PTS_dbg("UART TX tsk start");
-
     typedef enum {
         TX_INIT,
         TX_IDLE,

@@ -8,7 +8,7 @@ static const char moduleStr[] = "TSK";
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 
 static xTaskHandle _hInit;
-// static xTaskHandle _hUartTx;
+static xTaskHandle _hUartTx;
 static xTaskHandle _hUartRx;
 static xTaskHandle _hTaskManager;
 static xTaskHandle _hStatusLed;
@@ -18,7 +18,7 @@ void _tTaskManager(void *argument);
 
 static const taskDescription_t tasks[] = {
     // {taskINIT,              "taskInit",             _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    // {taskUartTx,            "taskUartTx",           _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE,           16,         1},
+    {taskUartTx,            "taskUartTx",           _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
     {taskUartRx,            "taskUartRx",           _tUartRx,           &_hUartRx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
     {taskTskManager,        "taskManager",          _tTaskManager,      &_hTaskManager,         NULL,       configMINIMAL_STACK_SIZE,           16,         1},
     {taskStatusLed,         "statusLed",            _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16,         1},
