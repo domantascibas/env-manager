@@ -1,5 +1,6 @@
 #include "task_manager.h"
 #include "uart.h"
+#include "init.h"
 
 #include "status_led.h"
 
@@ -17,11 +18,11 @@ static xTaskHandle _hPrintBlink;
 void _tTaskManager(void *argument);
 
 static const taskDescription_t tasks[] = {
-    // {taskINIT,              "taskInit",             _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    {taskUartTx,            "taskUartTx",           _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
-    {taskUartRx,            "taskUartRx",           _tUartRx,           &_hUartRx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
+    {taskINIT,              "init",                 _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16,         1},
+    {taskUartTx,            "UartTx",               _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
+    {taskUartRx,            "UartRx",               _tUartRx,           &_hUartRx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
+    {taskStatusLed,         "AliveLed",             _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16,         1},
     {taskTskManager,        "taskManager",          _tTaskManager,      &_hTaskManager,         NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    {taskStatusLed,         "statusLed",            _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16,         1},
     {taskPrintBlink,        "printBlink",           _tPrintBlink,       &_hPrintBlink,          NULL,       configMINIMAL_STACK_SIZE,           16,         0},
 };
 
@@ -62,23 +63,10 @@ void taskStop(eTaskID id) {
 }
 
 void _tTaskManager(void *argument) {
-    taskStart(taskStatusLed);
-    // uint8_t i;
-    // const taskDescription_t* task;
-
-    // for (i = 0; i < SIZEOF(tasks); i++) {
-    //     task = &tasks[i];
-    //     if (task->autorun) {
-    //         xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
-    //         PTS_dbg_f(" +%-16s START", task->name);
-    //     }
-    // }
-
     // while(1) {
     //     /* print some task statistics */
     // }
-
-    vTaskDelete(_hTaskManager);
+    taskStop(taskTskManager);
 }
 
 void task_toggle(void) {

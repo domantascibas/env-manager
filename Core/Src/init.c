@@ -15,16 +15,25 @@
 void hw_init(void) {
     MX_GPIO_Init();
     uart_init();
+    taskStart(taskStatusLed);
     
     print_reset_source();
     print_mcu_id_code();
     print_version();
 }
 
-    // /* else init. should start from task manager*/
-    // // MX_ADC1_Init();
-    // // MX_CRC_Init();
-    // // MX_I2C1_Init();
-    // // MX_RTC_Init();
-    // // MX_SPI1_Init();
-    // // // MX_WWDG_Init();
+void _tInit(void *arguments) {
+    /* else init. should start from task manager*/
+    // MX_ADC1_Init();
+    // MX_CRC_Init();
+    // MX_I2C1_Init();
+    // MX_RTC_Init();
+    // MX_SPI1_Init();
+    // // MX_WWDG_Init();
+
+    while(1) {
+
+    }
+    
+    taskStop(taskINIT);
+}

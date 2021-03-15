@@ -12,8 +12,7 @@ int main(void) {
     system_init();
     hw_init();
 
-    // taskStart(taskINIT);
-    taskStart(taskStatusLed);
+    taskStart(taskINIT);
     vTaskStartScheduler();
 
     while (1) {
