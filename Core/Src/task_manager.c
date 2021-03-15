@@ -44,7 +44,6 @@ void _tTaskManager(void *argument) {
         task = &tasks[i];
         if (task->autorun) {
             xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
-            task->state = 1;
             PTS_dbg_f(" +%-16s START", task->name);
         }
     }
@@ -53,13 +52,20 @@ void _tTaskManager(void *argument) {
 
 void task_toggle(void) {
     taskStruct_t* task = &tasks[1];
-    if (task->state) {
-        vTaskDelete(*task->handle);
-        task->state = 0;
-        PTS_dbg_f(" -%-16s STOP", task->name);
-    } else {
+    // PTS_dbg_f(" %s-16s handle:%d", task->name, *task->handle);
+
+    if (*task->handle == 0) {
         xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
-        task->state = 1;
         PTS_dbg_f(" +%-16s START", task->name);
+    } else {
+        eTaskState state = eTaskGetState(*task->handle);
+        if (state <= eSuspended) {
+            vTaskDelete(*task->handle);
+            PTS_dbg_f(" -%-16s STOP", task->name);
+        } else {
+            xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
+            PTS_dbg_f(" +%-16s START", task->name);
+        }
     }
 }
+
