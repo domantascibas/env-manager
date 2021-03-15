@@ -33,7 +33,7 @@ static taskStruct_t tasks[] = {
 };
 
 void task_manager_init(void) {
-    xTaskCreate(_tTaskManager, "taskManager", configMINIMAL_STACK_SIZE, NULL, 2, &_hTaskManager);
+    xTaskCreate(_tTaskManager, "taskManager", configMINIMAL_STACK_SIZE, NULL, 16, &_hTaskManager);
 }
 
 void _tTaskManager(void *argument) {
