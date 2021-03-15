@@ -4,9 +4,9 @@
 #include "semphr.h"
 #include "cmd_parser.h"
 
-static const char moduleStr[] = "UART";
-#define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
-#define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
+// static const char moduleStr[] = "UART";
+// #define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
+// #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 
 #define UART_INTERFACE_COUNT        1
 #define QUEUE_LENGTH                (MAX_MESSAGE_LENGTH * 8)
