@@ -45,7 +45,7 @@ void _tTaskManager(void *argument) {
         if (task->autorun) {
             xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
             task->state = 1;
-            PTS_dbg_f(" + %-16s  START", task->name);
+            PTS_dbg_f(" +%-16s START", task->name);
         }
     }
     vTaskDelete(_hTaskManager);
@@ -56,10 +56,10 @@ void task_toggle(void) {
     if (task->state) {
         vTaskDelete(*task->handle);
         task->state = 0;
-        PTS_dbg_f(" - %-16s  STOP", task->name);
+        PTS_dbg_f(" -%-16s STOP", task->name);
     } else {
         xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
         task->state = 1;
-        PTS_dbg_f(" + %-16s  START", task->name);
+        PTS_dbg_f(" +%-16s START", task->name);
     }
 }
