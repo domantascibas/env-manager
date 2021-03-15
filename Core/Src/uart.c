@@ -5,8 +5,6 @@
 #include "semphr.h"
 #include "cmd_parser.h"
 
-#include "main.h"
-
 static const char moduleStr[] = "UART";
 #define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
@@ -73,7 +71,7 @@ void uart_HAL_init(void) {
     UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
     if (HAL_UART_Init(&UartHandle) != HAL_OK) {
-        Error_Handler();
+        // Error_Handler();
     }
 }
 
