@@ -30,10 +30,6 @@ void _tInit(void *arguments) {
     // MX_RTC_Init();
     // MX_SPI1_Init();
     // // MX_WWDG_Init();
-
-    while(1) {
-
-    }
     
     taskStop(taskINIT);
 }

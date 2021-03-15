@@ -49,16 +49,16 @@ const taskDescription_t* findTask(eTaskID id) {
 void taskStart(eTaskID id) {
     const taskDescription_t *task = findTask(id);
     if (task != NULL) {
-        xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
         PTS_dbg_f(" +%-16s START", task->name);
+        xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
     }
 }
 
 void taskStop(eTaskID id) {
     const taskDescription_t *task = findTask(id);
     if (task != NULL) {
-        vTaskDelete(*task->handle);
         PTS_dbg_f(" -%-16s STOP", task->name);
+        vTaskDelete(*task->handle);
     }
 }
 
@@ -70,21 +70,14 @@ void _tTaskManager(void *argument) {
 }
 
 void task_toggle(void) {
-    const taskDescription_t* task = &tasks[1];
-    // PTS_dbg_f(" %s-16s handle:%d", task->name, *task->handle);
+    static uint8_t state_en = 0;
 
-    if (*task->handle == 0) {
-        xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
-        PTS_dbg_f(" +%-16s START", task->name);
+    if (!state_en) {
+        taskStart(taskPrintBlink);
+        state_en = 1;
     } else {
-        eTaskState state = eTaskGetState(*task->handle);
-        if (state <= eSuspended) {
-            vTaskDelete(*task->handle);
-            PTS_dbg_f(" -%-16s STOP", task->name);
-        } else {
-            xTaskCreate(task->func, task->name, task->stack_size, task->parameters, task->priority, task->handle);
-            PTS_dbg_f(" +%-16s START", task->name);
-        }
+        taskStop(taskPrintBlink);
+        state_en = 0;
     }
 }
 
