@@ -15,6 +15,7 @@
 void hw_init(void) {
     MX_GPIO_Init();
     uart_init();
+    
     print_reset_source();
     print_mcu_id_code();
     print_version();

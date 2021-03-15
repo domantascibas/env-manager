@@ -1,5 +1,3 @@
-#include "FreeRTOS.h"
-#include "task.h"
 #include "uart.h"
 #include "task_manager.h"
 #include "queue.h"
