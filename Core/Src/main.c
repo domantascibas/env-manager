@@ -1,54 +1,30 @@
 #include "main.h"
-#include "adc.h"
-#include "crc.h"
-#include "i2c.h"
+#include "init.h"
 #include "iwdg.h"
-#include "rtc.h"
-#include "spi.h"
-#include "wwdg.h"
-#include "gpio.h"
-#include "uart.h"
-#include "version.h"
 #include "reset_source.h"
 #include "task_manager.h"
 
 void system_init(void);
-void hw_init(void);
 void SystemClock_Config(void);
 
 int main(void) {
     MX_IWDG_Init();
     system_init();
     hw_init();
-    /* else init. should start from task manager*/
-    // MX_ADC1_Init();
-    // MX_CRC_Init();
-    // MX_I2C1_Init();
-    // MX_RTC_Init();
-    // MX_SPI1_Init();
-    // // MX_WWDG_Init();
-    print_reset_source();
-    print_mcu_id_code();
-    print_version();
 
-    taskStart(taskTskManager);
+    // taskStart(taskINIT);
+    taskStart(taskStatusLed);
     vTaskStartScheduler();
 
     while (1) {
+        /* endless loop */
     }
 }
 
 void system_init(void) {
-    /* system init */
     HAL_Init();
     SystemClock_Config();
     reset_source_init();
-}
-
-void hw_init(void) {
-    /* hw init */
-    MX_GPIO_Init();
-    uart_init();
 }
 
 void SystemClock_Config(void) {
