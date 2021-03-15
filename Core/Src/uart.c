@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "usart.h"
 #include "task_manager.h"
 #include "queue.h"
 #include "semphr.h"
@@ -16,7 +17,6 @@
 #define CHAR_TX_TIMEOUT             5
 
 static char MSG[MAX_MESSAGE_LENGTH];
-UART_HandleTypeDef UartHandle;
 
 static xSemaphoreHandle _TxMutex;
 // static xSemaphoreHandle _RxMutex;
@@ -38,8 +38,8 @@ uint8_t RX1_Char;
 
 void USART3_IRQHandler(void) {
     portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-    HAL_UART_IRQHandler(&UartHandle);
-	HAL_UART_Receive_IT(&UartHandle, &RX1_Char, 1);
+    HAL_UART_IRQHandler(&huart3);
+	HAL_UART_Receive_IT(&huart3, &RX1_Char, 1);
     xQueueSendFromISR(_RxQueue, &RX1_Char, &xHigherPriorityTaskWoken);
 
     if( xHigherPriorityTaskWoken ) {
@@ -48,7 +48,7 @@ void USART3_IRQHandler(void) {
 }
 
 void uart_init(void) {
-    uart_HAL_init();
+    MX_USART3_UART_Init();
     _TxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(TxBuffer[0]), &_TxQueueBuffer);
     _RxQueue = xQueueCreateStatic(QUEUE_LENGTH, QUEUE_ITEM_SIZE, &(RxBuffer[0]), &_RxQueueBuffer);
     _TxMutex = xSemaphoreCreateMutex();
@@ -58,24 +58,10 @@ void uart_init(void) {
     taskStart(taskUartRx);
 }
 
-void uart_HAL_init(void) {
-    UartHandle.Instance = USART3;
-    UartHandle.Init.BaudRate = 115200;
-    UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-    UartHandle.Init.StopBits = UART_STOPBITS_1;
-    UartHandle.Init.Parity = UART_PARITY_NONE;
-    UartHandle.Init.Mode = UART_MODE_TX_RX;
-    UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-    if (HAL_UART_Init(&UartHandle) != HAL_OK) {
-        // Error_Handler();
-    }
-}
-
 uint8_t uart_put_string(char *string) {
     if (xSemaphoreTake(_TxMutex, pdMS_TO_TICKS(TX_SEMAPHORE_MAX_WAIT)) == pdFAIL) {
         // check if uart dbg is enabled
-        HAL_UART_Transmit(&UartHandle, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart3, (uint8_t *)"UART semphr tmo\r\n", 18, HAL_MAX_DELAY);
         xSemaphoreGive(_TxMutex);
         return 0;
     }
@@ -84,7 +70,7 @@ uint8_t uart_put_string(char *string) {
         if (xQueueSend(_TxQueue, string, pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT)) == pdPASS) {
             string++;
         } else {
-            HAL_UART_Transmit(&UartHandle, (uint8_t *)"queue full\r\n", 14, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart3, (uint8_t *)"queue full\r\n", 14, HAL_MAX_DELAY);
         }
     }
     xQueueSend(_TxQueue, "\r", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
@@ -102,7 +88,7 @@ void _tUartTx(void *arguments) {
     } txTaskState_t;
 
     txTaskState_t txTaskState = TX_INIT;
-    HAL_UART_Receive_IT(&UartHandle, &RX1_Char, 1);
+    HAL_UART_Receive_IT(&huart3, &RX1_Char, 1);
     char c;
 
     while (1) {
@@ -120,7 +106,7 @@ void _tUartTx(void *arguments) {
                 break;
 
             case TX_SENDING:
-                HAL_UART_Transmit(&UartHandle, (uint8_t *)&c, 1, HAL_MAX_DELAY);
+                HAL_UART_Transmit(&huart3, (uint8_t *)&c, 1, HAL_MAX_DELAY);
                 if (xQueueReceive(_TxQueue, &c, pdMS_TO_TICKS(CHAR_TX_TIMEOUT)) == pdFAIL) {
                     txTaskState = TX_IDLE;
                 }
@@ -177,7 +163,7 @@ void clear_RxBuffer(uint8_t *idx) {
 }
 
 // void USART3_IRQHandler(void) {
-    // HAL_UART_IRQHandler(&UartHandle);
+    // HAL_UART_IRQHandler(&huart3);
     // portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
     // if (USART_GetITStatus(USART3, USART_IT_TXE) == SET) {
@@ -192,14 +178,14 @@ void clear_RxBuffer(uint8_t *idx) {
     //     }
     // }
 
-    // if (HAL_UART_Receive_IT(&UartHandle, bufferRx, MAX_MESSAGE_LENGTH) == HAL_OK) {
+    // if (HAL_UART_Receive_IT(&huart3, bufferRx, MAX_MESSAGE_LENGTH) == HAL_OK) {
         // xQueueSendFromISR(_TxQueue, bufferRx, &xHigherPriorityTaskWoken);
         // xQueueSend(_TxQueue, "cc\r\n", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
     // }
     // if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET) {
     //     /* A character has been received on the USART, send it to the Rx
     //     handler task. */
-    // HAL_UART_Receive_IT(&UartHandle, bufferRx, 1);
+    // HAL_UART_Receive_IT(&huart3, bufferRx, 1);
     // HAL_UART_RxCpltCallback();
     // }
 
