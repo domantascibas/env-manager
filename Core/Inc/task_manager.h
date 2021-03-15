@@ -23,7 +23,6 @@ typedef struct {
     void * const parameters;
     const configSTACK_DEPTH_TYPE stack_size;
     UBaseType_t priority;
-    uint8_t autorun;
 } taskDescription_t;
 
 void taskStart(eTaskID id);

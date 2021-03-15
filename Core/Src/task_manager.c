@@ -18,12 +18,12 @@ static xTaskHandle _hPrintBlink;
 void _tTaskManager(void *argument);
 
 static const taskDescription_t tasks[] = {
-    {taskINIT,              "init",                 _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    {taskUartTx,            "UartTx",               _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
-    {taskUartRx,            "UartRx",               _tUartRx,           &_hUartRx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16,         1},
-    {taskStatusLed,         "AliveLed",             _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    {taskTskManager,        "taskManager",          _tTaskManager,      &_hTaskManager,         NULL,       configMINIMAL_STACK_SIZE,           16,         1},
-    {taskPrintBlink,        "printBlink",           _tPrintBlink,       &_hPrintBlink,          NULL,       configMINIMAL_STACK_SIZE,           16,         0},
+    {taskINIT,              "init",                 _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16},
+    {taskUartTx,            "UartTx",               _tUartTx,           &_hUartTx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16},
+    {taskUartRx,            "UartRx",               _tUartRx,           &_hUartRx,              NULL,       configMINIMAL_STACK_SIZE * 2,       16},
+    {taskStatusLed,         "AliveLed",             _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16},
+    {taskTskManager,        "taskManager",          _tTaskManager,      &_hTaskManager,         NULL,       configMINIMAL_STACK_SIZE,           16},
+    {taskPrintBlink,        "printBlink",           _tPrintBlink,       &_hPrintBlink,          NULL,       configMINIMAL_STACK_SIZE,           16},
 };
 
 int8_t getTaskIndex(eTaskID id) {
