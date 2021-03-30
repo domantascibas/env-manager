@@ -32,6 +32,8 @@ Core/Src/status_led.c \
 Core/Src/adc.c \
 Core/Src/crc.c \
 Core/Src/i2c.c \
+Core/Src/i2c_manager.c \
+Core/Src/lcd.c \
 Core/Src/iwdg.c \
 Core/Src/rtc.c \
 Core/Src/spi.c \

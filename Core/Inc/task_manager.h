@@ -13,6 +13,8 @@ typedef enum {
     taskTskManager,
     taskStatusLed,
     taskPrintBlink,
+    taskI2C,
+    taskLCD,
 } eTaskID;
 
 typedef struct {

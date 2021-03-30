@@ -2,6 +2,8 @@
 #include "init.h"
 #include "uart.h"
 #include "status_led.h"
+#include "i2c_manager.h"
+#include "lcd.h"
 
 static const char moduleStr[] = "TSK";
 #define PTS_dbg(fmt, ...) PTS_d(moduleStr, fmt, ##__VA_ARGS__)
@@ -13,6 +15,8 @@ static xTaskHandle _hUartRx;
 static xTaskHandle _hTaskManager;
 static xTaskHandle _hStatusLed;
 static xTaskHandle _hPrintBlink;
+static xTaskHandle _hI2C;
+static xTaskHandle _hLcdDisplay;
 
 void _tTaskManager(void *arguments);
 
@@ -23,6 +27,8 @@ static const taskDescription_t tasks[] = {
     {taskStatusLed,         "AliveLed",             _tStatusLed,        &_hStatusLed,           NULL,       configMINIMAL_STACK_SIZE,           16},
     {taskTskManager,        "taskManager",          _tTaskManager,      &_hTaskManager,         NULL,       configMINIMAL_STACK_SIZE,           16},
     {taskPrintBlink,        "printBlink",           _tPrintBlink,       &_hPrintBlink,          NULL,       configMINIMAL_STACK_SIZE,           16},
+    {taskI2C,               "I2C",                  _tI2C,              &_hI2C,                 NULL,       configMINIMAL_STACK_SIZE,           16},
+    {taskLCD,               "LcdDisplay",           _tLcdDisplay,       &_hLcdDisplay,          NULL,       configMINIMAL_STACK_SIZE,           16},
 };
 
 int8_t getTaskIndex(eTaskID id) {
