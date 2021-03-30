@@ -1,7 +1,6 @@
 #include "task_manager.h"
-#include "uart.h"
 #include "init.h"
-
+#include "uart.h"
 #include "status_led.h"
 
 static const char moduleStr[] = "TSK";
@@ -15,7 +14,7 @@ static xTaskHandle _hTaskManager;
 static xTaskHandle _hStatusLed;
 static xTaskHandle _hPrintBlink;
 
-void _tTaskManager(void *argument);
+void _tTaskManager(void *arguments);
 
 static const taskDescription_t tasks[] = {
     {taskINIT,              "init",                 _tInit,             &_hInit,                NULL,       configMINIMAL_STACK_SIZE,           16},
@@ -62,7 +61,7 @@ void taskStop(eTaskID id) {
     }
 }
 
-void _tTaskManager(void *argument) {
+void _tTaskManager(void *arguments) {
     // while(1) {
     //     /* print some task statistics */
     // }
