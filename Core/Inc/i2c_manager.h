@@ -9,5 +9,6 @@
 #define I2C_ADDR_TEMP_BMP180        0x77
 
 void _tI2C(void *arguments);
+void i2c_write(uint8_t addr, uint8_t *data, uint8_t size);
 
 #endif

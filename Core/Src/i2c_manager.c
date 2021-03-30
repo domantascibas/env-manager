@@ -65,3 +65,7 @@ void _tI2C(void *arguments) {
         }
     }
 }
+
+void i2c_write(uint8_t addr, uint8_t *data, uint8_t size) {
+    HAL_I2C_Master_Transmit(&hi2c1, addr, data, size, 100);
+}
