@@ -41,7 +41,7 @@ int8_t getTaskIndex(eTaskID id) {
     return -1;
 }
 
-const taskDescription_t* findTask(eTaskID id) {
+const taskDescription_t *findTask(eTaskID id) {
     int8_t idx = getTaskIndex(id);
     if (idx >= 0) {
         return &tasks[idx];

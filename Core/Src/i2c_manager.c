@@ -17,7 +17,7 @@ void _tI2C(void *arguments) {
     static uint8_t present = 0;
     uint8_t found, address = 0;
 
-    while(1) {
+    while (1) {
         found = 0;
         address = 0;
         memset(devices, 0, I2C_MAX_DEVICES);
@@ -38,8 +38,8 @@ void _tI2C(void *arguments) {
                 PTS_dbg("Devices update");
                 present = found;
                 for (uint8_t i = 0; i < present; i++) {
-                    char *msg; 
-                    switch(devices[i]) {
+                    char *msg;
+                    switch (devices[i]) {
                         case I2C_ADDR_LIGHT_BH1750:
                             msg = "BH1750 light";
                             break;

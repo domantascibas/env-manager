@@ -39,10 +39,10 @@ uint8_t RX1_Char;
 void USART3_IRQHandler(void) {
     portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     HAL_UART_IRQHandler(&huart3);
-	HAL_UART_Receive_IT(&huart3, &RX1_Char, 1);
+    HAL_UART_Receive_IT(&huart3, &RX1_Char, 1);
     xQueueSendFromISR(_RxQueue, &RX1_Char, &xHigherPriorityTaskWoken);
 
-    if( xHigherPriorityTaskWoken ) {
+    if (xHigherPriorityTaskWoken) {
         taskYIELD();
     }
 }
@@ -127,8 +127,8 @@ void _tUartRx(void *arguments) {
     uint8_t idx = 0;
     char c;
 
-    while(1) {
-        switch(rxTaskState) {
+    while (1) {
+        switch (rxTaskState) {
             case RX_INIT:
                 rxTaskState = RX_IDLE;
                 clear_RxBuffer(&idx);
@@ -148,7 +148,7 @@ void _tUartRx(void *arguments) {
 
                 if ((CmdBuffer[idx - 1] == '\r' && CmdBuffer[idx - 2] == '\n') || (CmdBuffer[idx - 1] == '\n' && CmdBuffer[idx - 2] == '\r')) {
                     memset(&CmdBuffer[idx - 2], '\0', 2);
-                    idx-=2;
+                    idx -= 2;
                     parse_cmd(CmdBuffer, idx);
                     clear_RxBuffer(&idx);
                 }
@@ -163,117 +163,117 @@ void clear_RxBuffer(uint8_t *idx) {
 }
 
 // void USART3_IRQHandler(void) {
-    // HAL_UART_IRQHandler(&huart3);
-    // portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+// HAL_UART_IRQHandler(&huart3);
+// portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-    // if (USART_GetITStatus(USART3, USART_IT_TXE) == SET) {
-    //     /* The interrupt was caused by the TX register becoming empty.  Are
-    //     there any more characters to transmit? */
-    //     if (xQueueReceiveFromISR(xCharsForTx, &cChar, &xHigherPriorityTaskWoken) == pdTRUE) {
-    //         /* A character was retrieved from the queue so can be sent to the
-    //         USART now. */
-    //         USART_SendData(USART3, cChar);
-    //     } else {
-    //         USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
-    //     }
-    // }
+// if (USART_GetITStatus(USART3, USART_IT_TXE) == SET) {
+//     /* The interrupt was caused by the TX register becoming empty.  Are
+//     there any more characters to transmit? */
+//     if (xQueueReceiveFromISR(xCharsForTx, &cChar, &xHigherPriorityTaskWoken) == pdTRUE) {
+//         /* A character was retrieved from the queue so can be sent to the
+//         USART now. */
+//         USART_SendData(USART3, cChar);
+//     } else {
+//         USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+//     }
+// }
 
-    // if (HAL_UART_Receive_IT(&huart3, bufferRx, MAX_MESSAGE_LENGTH) == HAL_OK) {
-        // xQueueSendFromISR(_TxQueue, bufferRx, &xHigherPriorityTaskWoken);
-        // xQueueSend(_TxQueue, "cc\r\n", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
-    // }
-    // if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET) {
-    //     /* A character has been received on the USART, send it to the Rx
-    //     handler task. */
-    // HAL_UART_Receive_IT(&huart3, bufferRx, 1);
-    // HAL_UART_RxCpltCallback();
-    // }
+// if (HAL_UART_Receive_IT(&huart3, bufferRx, MAX_MESSAGE_LENGTH) == HAL_OK) {
+// xQueueSendFromISR(_TxQueue, bufferRx, &xHigherPriorityTaskWoken);
+// xQueueSend(_TxQueue, "cc\r\n", pdMS_TO_TICKS(TX_QUEUE_MAX_WAIT));
+// }
+// if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET) {
+//     /* A character has been received on the USART, send it to the Rx
+//     handler task. */
+// HAL_UART_Receive_IT(&huart3, bufferRx, 1);
+// HAL_UART_RxCpltCallback();
+// }
 
-    // /* If sending or receiving from a queue has caused a task to unblock, and
-    // the unblocked task has a priority equal to or higher than the currently
-    // running task (the task this ISR interrupted), then xHigherPriorityTaskWoken
-    // will have automatically been set to pdTRUE within the queue send or receive
-    // function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns
-    // directly to the higher priority unblocked task. */
-    // portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+// /* If sending or receiving from a queue has caused a task to unblock, and
+// the unblocked task has a priority equal to or higher than the currently
+// running task (the task this ISR interrupted), then xHigherPriorityTaskWoken
+// will have automatically been set to pdTRUE within the queue send or receive
+// function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns
+// directly to the higher priority unblocked task. */
+// portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 
-    // // Check to see if we just slept, if so, wake up peripherals
-    // //! @todo Get rid of this
-    // //if(PowerMgmt_AreWeSleeping() == TRUE)
-    // //   PowerMgmt_WakeUp();
+// // Check to see if we just slept, if so, wake up peripherals
+// //! @todo Get rid of this
+// //if(PowerMgmt_AreWeSleeping() == TRUE)
+// //   PowerMgmt_WakeUp();
 
-    // static portBASE_TYPE xHigherPriorityTaskWoken;
-    // // Set to false on interrupt entry
-    // xHigherPriorityTaskWoken = FALSE;
+// static portBASE_TYPE xHigherPriorityTaskWoken;
+// // Set to false on interrupt entry
+// xHigherPriorityTaskWoken = FALSE;
 
-    // // Get received byte (lower 8-bits) and error info from UART (higher 8-bits) (total 16-bits)
-    // do
-    // {
-    //  uint16_t byte = UartCpComms_GetByte();
+// // Get received byte (lower 8-bits) and error info from UART (higher 8-bits) (total 16-bits)
+// do
+// {
+//  uint16_t byte = UartCpComms_GetByte();
 
-    //  // Mask error info
-    //  uint8_t status = (byte >> 8);
+//  // Mask error info
+//  uint8_t status = (byte >> 8);
 
-    //  // Check for error
-    //  if(status == (UartCpComms_RX_STS_BREAK | UartCpComms_RX_STS_PAR_ERROR | UartCpComms_RX_STS_STOP_ERROR
-    //      | UartCpComms_RX_STS_OVERRUN | UartCpComms_RX_STS_SOFT_BUFF_OVER))
-    //  {
-    //      // UART error has occured
-    //      //Main_SetErrorLed();
-    //      #if(configPRINT_DEBUG_UartCpComms == 1)
-    //          if(status == UartCpComms_RX_STS_MRKSPC)
-    //          {
-    //              static char* msgErrorMarkOrSpaceWasReceivedInParityBit = "DEBUG_RX_INT: Error: Mark or space was received in parity bit.\r\n";
-    //              UartDebug_PutString(msgErrorMarkOrSpaceWasReceivedInParityBit);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_BREAK)
-    //          {
-    //              static char* msgBreakWasDetected = "DEBUG_RX_INT: Error: Break was detected.\r\n";
-    //              UartDebug_PutString(msgBreakWasDetected);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_PAR_ERROR)
-    //          {
-    //              static char* msgErorrParity = "DEBUG_RX_INT: Error: Parity error was detected.\r\n";
-    //              UartDebug_PutString(msgErorrParity);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_STOP_ERROR)
-    //          {
-    //              static char* msgErorrStop = "DEBUG_RX_INT: Error: Stop error was detected.\r\n";
-    //              UartDebug_PutString(msgErorrStop);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_OVERRUN)
-    //          {
-    //              static char* msgErrorFifoRxBufferOverrun = "DEBUG_RX_INT: Error: FIFO RX buffer was overrun.\r\n";
-    //              UartDebug_PutString(msgErrorFifoRxBufferOverrun);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_FIFO_NOTEMPTY)
-    //          {
-    //              static char* msgErrorRxBufferNotEmpty = "DEBUG_RX_INT: Error: RX buffer not empty.\r\n";
-    //              UartDebug_PutString(msgErrorRxBufferNotEmpty);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_ADDR_MATCH)
-    //          {
-    //              static char* msgErrorAddressMatch = "DEBUG_RX_INT: Error: Address match.\r\n";
-    //              UartDebug_PutString(msgErrorAddressMatch);
-    //          }
-    //          else if(status == UartCpComms_RX_STS_SOFT_BUFF_OVER)
-    //          {
-    //              static char* msgErrorSoftwareBufferOverflowed = "DEBUG_RX_INT: Error: RX software buffer ovverflowed.\r\n";
-    //              UartDebug_PutString(msgErrorSoftwareBufferOverflowed);
-    //          }
-    //      #endif
-    //  }
-    //  else
-    //  {
-    //      // Put byte in queue (ISR safe function)
-    //      xQueueSendToBackFromISR(_xRxQueue, &byte, &xHigherPriorityTaskWoken);
-    //  }
-    // }
-    // while((UartCpComms_ReadRxStatus() & UartCpComms_RX_STS_FIFO_NOTEMPTY) != 0x00);
+//  // Check for error
+//  if(status == (UartCpComms_RX_STS_BREAK | UartCpComms_RX_STS_PAR_ERROR | UartCpComms_RX_STS_STOP_ERROR
+//      | UartCpComms_RX_STS_OVERRUN | UartCpComms_RX_STS_SOFT_BUFF_OVER))
+//  {
+//      // UART error has occured
+//      //Main_SetErrorLed();
+//      #if(configPRINT_DEBUG_UartCpComms == 1)
+//          if(status == UartCpComms_RX_STS_MRKSPC)
+//          {
+//              static char* msgErrorMarkOrSpaceWasReceivedInParityBit = "DEBUG_RX_INT: Error: Mark or space was received in parity bit.\r\n";
+//              UartDebug_PutString(msgErrorMarkOrSpaceWasReceivedInParityBit);
+//          }
+//          else if(status == UartCpComms_RX_STS_BREAK)
+//          {
+//              static char* msgBreakWasDetected = "DEBUG_RX_INT: Error: Break was detected.\r\n";
+//              UartDebug_PutString(msgBreakWasDetected);
+//          }
+//          else if(status == UartCpComms_RX_STS_PAR_ERROR)
+//          {
+//              static char* msgErorrParity = "DEBUG_RX_INT: Error: Parity error was detected.\r\n";
+//              UartDebug_PutString(msgErorrParity);
+//          }
+//          else if(status == UartCpComms_RX_STS_STOP_ERROR)
+//          {
+//              static char* msgErorrStop = "DEBUG_RX_INT: Error: Stop error was detected.\r\n";
+//              UartDebug_PutString(msgErorrStop);
+//          }
+//          else if(status == UartCpComms_RX_STS_OVERRUN)
+//          {
+//              static char* msgErrorFifoRxBufferOverrun = "DEBUG_RX_INT: Error: FIFO RX buffer was overrun.\r\n";
+//              UartDebug_PutString(msgErrorFifoRxBufferOverrun);
+//          }
+//          else if(status == UartCpComms_RX_STS_FIFO_NOTEMPTY)
+//          {
+//              static char* msgErrorRxBufferNotEmpty = "DEBUG_RX_INT: Error: RX buffer not empty.\r\n";
+//              UartDebug_PutString(msgErrorRxBufferNotEmpty);
+//          }
+//          else if(status == UartCpComms_RX_STS_ADDR_MATCH)
+//          {
+//              static char* msgErrorAddressMatch = "DEBUG_RX_INT: Error: Address match.\r\n";
+//              UartDebug_PutString(msgErrorAddressMatch);
+//          }
+//          else if(status == UartCpComms_RX_STS_SOFT_BUFF_OVER)
+//          {
+//              static char* msgErrorSoftwareBufferOverflowed = "DEBUG_RX_INT: Error: RX software buffer ovverflowed.\r\n";
+//              UartDebug_PutString(msgErrorSoftwareBufferOverflowed);
+//          }
+//      #endif
+//  }
+//  else
+//  {
+//      // Put byte in queue (ISR safe function)
+//      xQueueSendToBackFromISR(_xRxQueue, &byte, &xHigherPriorityTaskWoken);
+//  }
+// }
+// while((UartCpComms_ReadRxStatus() & UartCpComms_RX_STS_FIFO_NOTEMPTY) != 0x00);
 
-    // // Force a context swicth if interrupt unblocked a task with a higher or equal priority
-    // // to the currently running task
-    // portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+// // Force a context swicth if interrupt unblocked a task with a higher or equal priority
+// // to the currently running task
+// portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 // }
 
 // void UartComms_GetChar(char* singleChar)

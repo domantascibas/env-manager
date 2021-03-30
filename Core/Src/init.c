@@ -16,7 +16,7 @@ void hw_init(void) {
     MX_GPIO_Init();
     uart_init();
     taskStart(taskStatusLed);
-    
+
     print_reset_source();
     print_mcu_id_code();
     print_version();
@@ -46,6 +46,6 @@ void _tInit(void *arguments) {
     //     PTS_f("ADC1: %ld, %f", Vref, Vdd);
     //     vTaskDelay(1000);
     // }
-    
+
     taskStop(taskINIT);
 }

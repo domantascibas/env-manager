@@ -19,10 +19,10 @@ typedef enum {
 
 typedef struct {
     eTaskID const hardID;
-    const char * const name;
+    const char *const name;
     TaskFunction_t func;
-    TaskHandle_t * const handle;
-    void * const parameters;
+    TaskHandle_t *const handle;
+    void *const parameters;
     const configSTACK_DEPTH_TYPE stack_size;
     UBaseType_t priority;
 } taskDescription_t;

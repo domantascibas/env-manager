@@ -101,20 +101,20 @@ void adv_parse_cmd(uint8_t *cmd, uint16_t sz) {
             uint8_t i = atoi(item);
             PTS_dbg_f("number, %d", i);
             //  param[pos]=atoi(item);
-             items_return++;
+            items_return++;
         } else {
             // PTS_dbg("text");
 
             // if (find_dictionary(item, item_len, pos , &value) > (-1)) {
-                // param[pos] = value;
-                //printf("dict param[%d] %d\r\n",pos,param[pos]);
-                items_return++;
+            // param[pos] = value;
+            //printf("dict param[%d] %d\r\n",pos,param[pos]);
+            items_return++;
             // } else {
-                // printf("dict param[%d] [%s] NOT FOUND\r\n",pos,item);
-                // return (-1);
+            // printf("dict param[%d] [%s] NOT FOUND\r\n",pos,item);
+            // return (-1);
             // }
         }
-        
+
         item = strtok(NULL, &DELIM);
         pos++;
     }
