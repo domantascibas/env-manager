@@ -54,6 +54,11 @@ void MX_I2C1_Init(void) {
 
 }
 
+void I2C_reset(void) {
+    HAL_I2C_DeInit(&hi2c1);
+    MX_I2C1_Init();
+}
+
 void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle) {
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
