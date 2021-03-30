@@ -13,6 +13,8 @@ static const char moduleStr[] = "I2C";
 #define PTS_dbg_f(fmt, ...) PTS_df(moduleStr, fmt, ##__VA_ARGS__)
 
 void _tI2C(void *arguments) {
+    MX_I2C1_Init();
+
     uint8_t devices[I2C_MAX_DEVICES];
     static uint8_t present = 0;
     uint8_t found, address = 0;
@@ -40,12 +42,12 @@ void _tI2C(void *arguments) {
                 for (uint8_t i = 0; i < present; i++) {
                     char *msg;
                     switch (devices[i]) {
-                        case I2C_ADDR_LIGHT_BH1750:
-                            msg = "BH1750 light";
-                            break;
-
                         case I2C_ADDR_LCD_HD44780:
                             msg = "HD44780 lcd";
+                            break;
+
+                        case I2C_ADDR_LIGHT_BH1750:
+                            msg = "BH1750 light";
                             break;
 
                         case I2C_ADDR_TEMP_BMP180:

@@ -27,12 +27,12 @@ void _tInit(void *arguments) {
     MX_RTC_Init();
     MX_CRC_Init();
     MX_ADC1_Init();
-    MX_I2C1_Init();
     // MX_SPI1_Init();
     // // MX_WWDG_Init();
 
     /* start fw tasks */
     taskStart(taskI2C);
+    taskStart(taskLCD);
 
     // uint32_t Vref = 0;
     // float Vdd = 0.0;
