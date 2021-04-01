@@ -28,7 +28,7 @@ void _tInit(void *arguments) {
     MX_CRC_Init();
     MX_ADC1_Init();
     // MX_SPI1_Init();
-    // // MX_WWDG_Init();
+    // MX_WWDG_Init();
 
     /* start fw tasks */
     taskStart(taskI2C);

@@ -24,29 +24,31 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/init.c \
-Core/Src/gpio.c \
-Core/Src/task_manager.c \
-Core/Src/status_led.c \
-Core/Src/adc.c \
-Core/Src/crc.c \
-Core/Src/i2c.c \
-Core/Src/i2c_manager.c \
-Core/Src/lcd.c \
-Core/Src/hd44780.c \
-Core/Src/iwdg.c \
-Core/Src/rtc.c \
-Core/Src/spi.c \
-Core/Src/uart.c \
-Core/Src/usart.c \
-Core/Src/cmd_parser.c \
-Core/Src/version.c \
-Core/Src/reset_source.c \
-Core/Src/drv_reset_source.c \
-Core/Src/stm32f1xx_it.c \
-Core/Src/stm32f1xx_hal_msp.c \
-Core/Src/stm32f1xx_hal_timebase_tim.c \
+Core/main.c \
+Core/init.c \
+Core/version.c \
+Core/hardware-specific/adc.c \
+Core/hardware-specific/crc.c \
+Core/hardware-specific/drv_reset_source.c \
+Core/hardware-specific/gpio.c \
+Core/hardware-specific/i2c.c \
+Core/hardware-specific/iwdg.c \
+Core/hardware-specific/rtc.c \
+Core/hardware-specific/spi.c \
+Core/hardware-specific/stm32f1xx_hal_msp.c \
+Core/hardware-specific/stm32f1xx_hal_timebase_tim.c \
+Core/hardware-specific/stm32f1xx_it.c \
+Core/hardware-specific/system_stm32f1xx.c \
+Core/hardware-specific/usart.c \
+Core/hardware-specific/wwdg.c \
+Core/module-drivers/hd44780/hd44780.c \
+Core/modules/cmd-parser/cmd_parser.c \
+Core/modules/i2c-manager/i2c_manager.c \
+Core/modules/lcd/lcd.c \
+Core/modules/reset-source/reset_source.c \
+Core/modules/status-led/status_led.c \
+Core/modules/task-manager/task_manager.c \
+Core/modules/uart/uart.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc_ex.c \
@@ -69,7 +71,6 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c \
-Core/Src/system_stm32f1xx.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -80,7 +81,6 @@ Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
-Core/Src/wwdg.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -138,7 +138,17 @@ AS_INCLUDES =  \
 
 # C includes
 C_INCLUDES =  \
--ICore/Inc \
+-ICore/ \
+-ICore/hardware-specific \
+-ICore/module-drivers \
+-ICore/module-drivers/hd44780 \
+-ICore/modules/cmd-parser \
+-ICore/modules/i2c-manager \
+-ICore/modules/lcd \
+-ICore/modules/reset-source \
+-ICore/modules/status-led \
+-ICore/modules/task-manager \
+-ICore/modules/uart \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
